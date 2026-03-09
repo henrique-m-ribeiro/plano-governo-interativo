@@ -10,6 +10,8 @@ Diferente de um PDF tradicional de plano de governo, esta plataforma permite ao 
 - Filtrar propostas relevantes para seu município ou região
 - Entender a lógica de priorização das propostas
 - Navegar por múltiplos caminhos: por eixo temático, município, região ou tema
+- Interagir com um assistente de IA para explorar propostas e dados
+- Registrar contribuições e prioridades no canal de escuta cidadã
 
 ## Stack Técnica
 
@@ -20,6 +22,7 @@ Diferente de um PDF tradicional de plano de governo, esta plataforma permite ao 
 | Mapas | Leaflet + react-leaflet |
 | Ícones | lucide-react |
 | Dados | JSONs do tocantins-integrado |
+| IA/LLM | Integração com API de LLM (assistente conversacional e processamento de contribuições) |
 | Deploy | Vercel |
 
 ## Começando
@@ -69,6 +72,14 @@ plano-governo-interativo/
 5. **Meio Ambiente e Sustentabilidade** — Cerrado-Amazônia, queimadas, bioeconomia
 6. **Segurança Pública e Cidadania** — Violência, policiamento, atendimento
 7. **Gestão Pública e Inovação** — Inteligência territorial, governo digital
+
+## Funcionalidades de IA
+
+A plataforma incorpora inteligência artificial em três dimensões:
+
+1. **Exploração Assistida** — Assistente conversacional que permite perguntas em linguagem natural sobre propostas, dados e municípios
+2. **Escuta Inclusiva** — Canal de participação cidadã com IA que ajuda a organizar contribuições em linguagem livre
+3. **Inteligência para Planejamento** — Contribuições processadas para identificar padrões e prioridades por município e região
 
 ## Conexão Acadêmica
 

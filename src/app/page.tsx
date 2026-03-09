@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Map, LayoutGrid, MapPin, Search, ArrowRight } from "lucide-react";
+import { Map, LayoutGrid, MapPin, Search, MessageCircle, ArrowRight, Bot, Heart, Brain } from "lucide-react";
 import { EixoCard } from "@/components/eixos/eixo-card";
 import { StatCard } from "@/components/ui/stat-card";
 import { MapaPlaceholder } from "@/components/mapa/mapa-placeholder";
@@ -21,8 +21,10 @@ export default function Home() {
             <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4">
               Plano de Governo Interativo do Tocantins
             </h1>
-            <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-              Propostas baseadas em dados reais para os 139 municípios.
+            <p className="text-lg md:text-xl text-white/90 mb-2 leading-relaxed">
+              Professora Dorinha — Propostas baseadas em dados reais para os 139 municípios.
+            </p>
+            <p className="text-base md:text-lg text-white/80 mb-8 leading-relaxed">
               Navegue por eixos temáticos, explore seu município e entenda
               como cada proposta responde a um diagnóstico do território.
             </p>
@@ -64,7 +66,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Como você quer navegar?
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
               {
                 href: "/mapa",
@@ -89,6 +91,12 @@ export default function Home() {
                 icone: Search,
                 titulo: "Por Tema",
                 descricao: "Busque por um assunto que importa para você.",
+              },
+              {
+                href: "/participar",
+                icone: MessageCircle,
+                titulo: "Sua Voz",
+                descricao: "Registre o que é prioritário para o seu município.",
               },
             ].map((caminho) => (
               <Link
@@ -120,6 +128,59 @@ export default function Home() {
             </Link>
           </div>
           <MapaPlaceholder />
+        </div>
+      </section>
+
+      {/* Uma plataforma que escuta */}
+      <section className="py-16 bg-gradient-to-br from-[var(--primary)]/5 to-[var(--primary-light)]/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+              Uma plataforma que escuta
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Mais que um plano estático: uma ferramenta viva que usa inteligência artificial
+              para conectar cidadãos, dados e propostas.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+                <Bot className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold mb-2">Exploração Assistida</h3>
+              <p className="text-sm text-gray-600">
+                Faça perguntas em linguagem natural sobre propostas, dados e municípios.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-6 h-6 text-rose-600" />
+              </div>
+              <h3 className="font-semibold mb-2">Escuta Inclusiva</h3>
+              <p className="text-sm text-gray-600">
+                Canal de participação com IA que ajuda quem tem dificuldade em preencher formulários.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-4">
+                <Brain className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold mb-2">Inteligência para Planejamento</h3>
+              <p className="text-sm text-gray-600">
+                Contribuições processadas para identificar padrões e prioridades por município e região.
+              </p>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/participar"
+              className="inline-flex items-center gap-2 bg-[var(--primary)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--primary-light)] transition-colors"
+            >
+              <MessageCircle className="w-5 h-5" />
+              Participe
+            </Link>
+          </div>
         </div>
       </section>
 

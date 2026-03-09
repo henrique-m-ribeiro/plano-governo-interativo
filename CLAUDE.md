@@ -1,8 +1,10 @@
 # CLAUDE.md — Plano de Governo Interativo do Tocantins
 
 ## Projeto
-Plataforma web pública que apresenta o plano de governo do Tocantins de forma interativa,
-conectando propostas a dados reais do território (139 municípios).
+Plataforma web pública que apresenta o plano de governo da Senadora Professora Dorinha
+para o Tocantins de forma interativa, conectando propostas a dados reais do território
+(139 municípios). A plataforma é destinada à candidatura de Professora Dorinha ao governo
+do estado, apresentando o plano de governo com base em evidências e escuta cidadã.
 
 ## Ecossistema
 - **Repo acadêmico central:** [doutorado](https://github.com/henrique-m-ribeiro/doutorado)
@@ -21,6 +23,7 @@ conectando propostas a dados reais do território (139 municípios).
 - **Mapas:** Leaflet + react-leaflet (GeoJSON dos 139 municípios)
 - **Ícones:** lucide-react
 - **Dados:** JSONs importados do tocantins-integrado (não duplicar banco)
+- **IA/LLM:** Integração com API de LLM para assistente conversacional e processamento de contribuições
 - **Deploy:** Vercel (free tier)
 - **Acessibilidade:** WCAG 2.1 AA obrigatório
 - **Mobile-first:** Acesso principal será por celular
@@ -41,6 +44,22 @@ conectando propostas a dados reais do território (139 municípios).
 5. Meio Ambiente e Sustentabilidade
 6. Segurança Pública e Cidadania
 7. Gestão Pública e Inovação (eixo transversal — convergência acadêmica)
+
+## Funcionalidades de IA
+A plataforma incorpora IA em três dimensões complementares:
+
+1. **Exploração Assistida** — Assistente conversacional (chat flutuante) que permite ao cidadão
+   fazer perguntas em linguagem natural sobre propostas, dados e municípios.
+2. **Escuta Inclusiva** — Canal de participação cidadã (/participar) com IA que ajuda quem tem
+   dificuldade em preencher formulários, organizando contribuições em linguagem livre.
+3. **Inteligência para Planejamento** — Contribuições processadas por IA para identificar padrões,
+   temas recorrentes e prioridades por município e região, alimentando o plano continuamente.
+
+A dimensão de escuta conecta diretamente com a pesquisa de doutorado:
+- PS2: como IT-IA reconfigura a gestão territorial
+- PS3: como a escuta mediada por IA transforma a relação governo-cidadão
+- OE3: transformações na gestão pública
+- OE4: potencial de replicação e escalabilidade
 
 ## Princípios de Design
 - **Dados primeiro:** Toda proposta vinculada a indicadores reais

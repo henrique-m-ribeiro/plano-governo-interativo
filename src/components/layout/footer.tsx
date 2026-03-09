@@ -14,9 +14,12 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-3 text-sm">
               Plano de Governo Interativo
             </h3>
-            <p className="text-xs leading-relaxed">
-              Propostas baseadas em dados reais para os 139 municípios do
-              Tocantins. Todas as informações são de fontes públicas oficiais.
+            <p className="text-xs leading-relaxed mb-2">
+              Plano de governo de Professora Dorinha para o Tocantins.
+              Propostas baseadas em dados reais para os 139 municípios.
+            </p>
+            <p className="text-xs leading-relaxed text-white/50">
+              Senadora Professora Dorinha — Tocantins
             </p>
           </div>
 
@@ -52,6 +55,11 @@ export function Footer() {
               <li>
                 <Link href="/mapa" className="hover:text-white transition-colors">
                   Mapa do Tocantins
+                </Link>
+              </li>
+              <li>
+                <Link href="/participar" className="hover:text-white transition-colors">
+                  Participe
                 </Link>
               </li>
             </ul>

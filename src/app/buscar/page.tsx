@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { eixos } from "@/data/eixos";
 import { PropostaCard } from "@/components/eixos/proposta-card";
 
@@ -86,6 +86,12 @@ export default function BuscarPage() {
           )}
         </div>
       )}
+
+      {/* Nota sobre busca com IA */}
+      <div className="mb-6 flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-lg px-4 py-3 text-sm text-purple-800">
+        <Sparkles className="w-4 h-4 shrink-0" />
+        <p>Em breve: busca por linguagem natural com inteligência artificial.</p>
+      </div>
 
       {/* Sugestões quando não há busca */}
       {termo.length < 2 && (
