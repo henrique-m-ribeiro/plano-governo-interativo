@@ -1,4 +1,4 @@
-import { Database, GitBranch, Eye, Users } from "lucide-react";
+import { Database, GitBranch, Eye, Users, Bot, Heart, Brain } from "lucide-react";
 
 export const metadata = {
   title: "Sobre o Plano — Plano de Governo Interativo",
@@ -84,6 +84,44 @@ export default function SobrePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Inteligência Artificial a Serviço do Cidadão */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">
+          Inteligência Artificial a Serviço do Cidadão
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="p-5 bg-white rounded-lg border border-gray-200 text-center">
+            <Bot className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+            <h3 className="font-semibold text-gray-900 mb-2">Exploração Assistida</h3>
+            <p className="text-sm text-gray-600">
+              Faça perguntas em linguagem natural sobre propostas, dados e municípios.
+              O assistente de IA ajuda você a encontrar o que precisa.
+            </p>
+          </div>
+          <div className="p-5 bg-white rounded-lg border border-gray-200 text-center">
+            <Heart className="w-8 h-8 text-rose-600 mx-auto mb-3" />
+            <h3 className="font-semibold text-gray-900 mb-2">Escuta Inclusiva</h3>
+            <p className="text-sm text-gray-600">
+              Canal de participação com IA que ajuda quem tem dificuldade em preencher
+              formulários, organizando contribuições em linguagem livre.
+            </p>
+          </div>
+          <div className="p-5 bg-white rounded-lg border border-gray-200 text-center">
+            <Brain className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+            <h3 className="font-semibold text-gray-900 mb-2">Inteligência para o Planejamento</h3>
+            <p className="text-sm text-gray-600">
+              Contribuições processadas para identificar padrões e prioridades
+              por município e região, alimentando o plano continuamente.
+            </p>
+          </div>
+        </div>
+        <p className="text-gray-600 text-sm leading-relaxed">
+          Esta plataforma não é estática. As contribuições dos cidadãos alimentam o plano de governo,
+          que se atualiza com base na escuta do território. A inteligência artificial é uma ferramenta
+          a serviço da participação — nunca a substitui.
+        </p>
       </section>
 
       {/* Fontes de dados */}

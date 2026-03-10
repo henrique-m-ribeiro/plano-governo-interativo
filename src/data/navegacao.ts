@@ -35,6 +35,12 @@ export const navegacaoPrincipal: ItemNavegacao[] = [
     descricao: "Busque por tema, município ou proposta",
     icone: "Search",
   },
+  {
+    titulo: "Participe",
+    href: "/participar",
+    descricao: "Registre demandas e prioridades para seu município",
+    icone: "MessageCircle",
+  },
 ];
 
 export const navegacaoSecundaria: ItemNavegacao[] = [
