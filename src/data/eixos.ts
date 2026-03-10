@@ -363,6 +363,159 @@ export const eixos: Eixo[] = [
     icone: "Settings",
     transversal: true,
   },
+  {
+    id: 8,
+    slug: "agropecuaria",
+    titulo: "Agropecuária e Desenvolvimento Rural",
+    subtitulo: "Competitividade com Desenvolvimento Social",
+    problemaCentral:
+      "O Tocantins possui enorme potencial agropecuário, mas a cadeia produtiva ainda é concentrada em poucos municípios e o valor agregado permanece baixo, com exportação predominante de grãos e gado in natura, sem industrialização local que gere emprego e renda para toda a população.",
+    indicadoresChave: [
+      "Valor Bruto da Produção Agropecuária",
+      "Área plantada vs. produtividade",
+      "Empregos formais no agronegócio",
+      "Participação da agricultura familiar",
+    ],
+    propostas: [
+      {
+        id: "e8-p1",
+        titulo: "Assistência Técnica e Extensão Rural Universal",
+        descricao:
+          "Expansão dos serviços de assistência técnica e extensão rural (ATER) para alcançar 100% dos agricultores familiares, com foco em tecnologias de baixo carbono e aumento de produtividade sustentável.",
+        meta: "Cobertura de ATER em todos os 139 municípios até 2030",
+        indicadoresRelacionados: [
+          "Participação da agricultura familiar",
+          "Área plantada vs. produtividade",
+        ],
+      },
+      {
+        id: "e8-p2",
+        titulo: "Agroindústria de Proximidade",
+        descricao:
+          "Programa de implantação de agroindústrias de pequeno porte nos polos regionais para agregação de valor à produção local, gerando emprego e reduzindo a dependência da exportação de matéria-prima bruta.",
+        meta: "Implantar 20 agroindústrias de proximidade até 2030",
+        indicadoresRelacionados: [
+          "Valor Bruto da Produção Agropecuária",
+          "Empregos formais no agronegócio",
+        ],
+      },
+      {
+        id: "e8-p3",
+        titulo: "Seguro e Crédito Rural Acessível",
+        descricao:
+          "Criação de linha estadual complementar de crédito e seguro rural para pequenos e médios produtores, reduzindo barreiras burocráticas e ampliando a proteção contra perdas climáticas.",
+        indicadoresRelacionados: [
+          "Participação da agricultura familiar",
+          "Valor Bruto da Produção Agropecuária",
+        ],
+      },
+    ],
+    cor: "yellow",
+    corHex: "#8B6914",
+    icone: "Wheat",
+  },
+  {
+    id: 9,
+    slug: "mineracao",
+    titulo: "Mineração Sustentável",
+    subtitulo: "Recursos Minerais com Responsabilidade",
+    problemaCentral:
+      "O Tocantins possui reservas minerais significativas, mas a exploração ainda é desordenada em muitas regiões, com impactos ambientais e sociais que poderiam ser mitigados com regulação moderna, fiscalização efetiva e exigência de contrapartidas para o desenvolvimento local.",
+    indicadoresChave: [
+      "Receita de CFEM por município",
+      "Licenças ambientais vigentes",
+      "Empregos no setor mineral",
+      "Áreas de recuperação ambiental",
+    ],
+    propostas: [
+      {
+        id: "e9-p1",
+        titulo: "Regulação e Fiscalização Integrada",
+        descricao:
+          "Modernização do marco regulatório estadual de mineração com sistema integrado de fiscalização ambiental, garantindo que toda atividade minerária tenha licença válida e plano de recuperação de áreas degradadas.",
+        meta: "100% das atividades minerárias licenciadas e fiscalizadas até 2029",
+        indicadoresRelacionados: [
+          "Licenças ambientais vigentes",
+          "Áreas de recuperação ambiental",
+        ],
+      },
+      {
+        id: "e9-p2",
+        titulo: "CFEM para Desenvolvimento Local",
+        descricao:
+          "Programa de orientação e capacitação dos municípios mineradores para aplicação eficiente da CFEM em infraestrutura social, educação e diversificação econômica.",
+        indicadoresRelacionados: [
+          "Receita de CFEM por município",
+          "Empregos no setor mineral",
+        ],
+      },
+      {
+        id: "e9-p3",
+        titulo: "Mineração de Pequena Escala Regularizada",
+        descricao:
+          "Programa estadual de regularização e apoio técnico à mineração de pequena escala (garimpo), com foco em práticas ambientalmente responsáveis e formalização dos trabalhadores.",
+        indicadoresRelacionados: [
+          "Empregos no setor mineral",
+          "Licenças ambientais vigentes",
+        ],
+      },
+    ],
+    cor: "gray",
+    corHex: "#6B7280",
+    icone: "Mountain",
+  },
+  {
+    id: 10,
+    slug: "industrializacao",
+    titulo: "Industrialização e Atração de Investimentos",
+    subtitulo: "Emprego Qualificado e Valor Agregado",
+    problemaCentral:
+      "O Tocantins exporta matéria-prima bruta e importa produtos manufaturados. A ausência de parque industrial robusto limita as oportunidades de emprego qualificado e faz com que a riqueza gerada no estado seja transferida para outras regiões sem beneficiar a população local.",
+    indicadoresChave: [
+      "Participação industrial no PIB estadual",
+      "Empregos industriais formais",
+      "Balança comercial de manufaturados",
+      "Número de indústrias instaladas",
+    ],
+    propostas: [
+      {
+        id: "e10-p1",
+        titulo: "Distritos Industriais Regionais",
+        descricao:
+          "Implantação de distritos industriais nos polos regionais com infraestrutura pronta (energia, água, logística, internet), incentivos fiscais transparentes e foco em cadeias produtivas com vocação local.",
+        meta: "Implantar 6 distritos industriais regionais até 2030",
+        indicadoresRelacionados: [
+          "Participação industrial no PIB estadual",
+          "Número de indústrias instaladas",
+        ],
+      },
+      {
+        id: "e10-p2",
+        titulo: "Programa Estadual de Qualificação Industrial",
+        descricao:
+          "Parceria com SENAI, SESI e universidades para formar mão de obra qualificada para a indústria, com cursos alinhados às demandas das empresas atraídas para o estado.",
+        meta: "Qualificar 10.000 trabalhadores para a indústria até 2030",
+        indicadoresRelacionados: [
+          "Empregos industriais formais",
+          "Participação industrial no PIB estadual",
+        ],
+      },
+      {
+        id: "e10-p3",
+        titulo: "Atração de Investimentos com Contrapartida Social",
+        descricao:
+          "Programa estruturado de atração de investimentos industriais com exigência de contrapartidas sociais: emprego local, fornecedores regionais e investimento em formação profissional.",
+        indicadoresRelacionados: [
+          "Balança comercial de manufaturados",
+          "Empregos industriais formais",
+          "Número de indústrias instaladas",
+        ],
+      },
+    ],
+    cor: "indigo",
+    corHex: "#4338CA",
+    icone: "Factory",
+  },
 ];
 
 /**

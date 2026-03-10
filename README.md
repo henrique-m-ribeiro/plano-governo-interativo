@@ -72,6 +72,9 @@ plano-governo-interativo/
 5. **Meio Ambiente e Sustentabilidade** — Cerrado-Amazônia, queimadas, bioeconomia
 6. **Segurança Pública e Cidadania** — Violência, policiamento, atendimento
 7. **Gestão Pública e Inovação** — Inteligência territorial, governo digital
+8. **Agropecuária e Desenvolvimento Rural** — Competitividade com desenvolvimento social
+9. **Mineração Sustentável** — Recursos minerais com responsabilidade ambiental
+10. **Industrialização e Atração de Investimentos** — Emprego qualificado e valor agregado
 
 ## Funcionalidades de IA
 

@@ -36,7 +36,7 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 - Dados estáticos em `src/data/`
 - Componentes reutilizáveis em `src/components/`
 
-## Estrutura dos 7 Eixos Temáticos
+## Estrutura dos 10 Eixos Temáticos
 1. Desenvolvimento Regional e Redução de Desigualdades
 2. Educação e Capital Humano
 3. Saúde e Qualidade de Vida
@@ -44,6 +44,13 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 5. Meio Ambiente e Sustentabilidade
 6. Segurança Pública e Cidadania
 7. Gestão Pública e Inovação (eixo transversal — convergência acadêmica)
+8. Agropecuária e Desenvolvimento Rural
+9. Mineração Sustentável
+10. Industrialização e Atração de Investimentos
+
+Os eixos 8, 9 e 10 refletem as vocações econômicas do Tocantins e dialogam com pautas
+de alto engajamento no eleitorado. O diagnóstico territorial parte do trabalho da
+Secretaria de Planejamento do Tocantins (dados no repo caderno-tocantins-2026).
 
 ## Funcionalidades de IA
 A plataforma incorpora IA em três dimensões complementares:
