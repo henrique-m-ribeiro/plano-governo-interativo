@@ -7,6 +7,9 @@ import {
   Leaf,
   Shield,
   Settings,
+  Wheat,
+  Mountain,
+  Factory,
 } from "lucide-react";
 import type { Eixo } from "@/data/eixos";
 
@@ -21,6 +24,9 @@ const iconeMap: Record<string, React.ComponentType<{ className?: string; style?:
   Leaf,
   Shield,
   Settings,
+  Wheat,
+  Mountain,
+  Factory,
 };
 
 interface EixoCardProps {

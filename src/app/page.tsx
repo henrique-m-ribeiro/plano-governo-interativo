@@ -53,7 +53,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard numero="139" label="Municípios" descricao="com dados individuais" />
-            <StatCard numero="7" label="Eixos Temáticos" descricao="de desenvolvimento" />
+            <StatCard numero="10" label="Eixos Temáticos" descricao="de desenvolvimento" />
             <StatCard numero={String(totalPropostas)} label="Propostas" descricao="baseadas em dados" />
             <StatCard numero="6" label="Regiões" descricao="de planejamento" />
           </div>
@@ -78,7 +78,7 @@ export default function Home() {
                 href: "/eixos",
                 icone: LayoutGrid,
                 titulo: "Por Eixo Temático",
-                descricao: "Explore os 7 eixos: saúde, educação, infraestrutura...",
+                descricao: "Explore os 10 eixos: saúde, educação, infraestrutura...",
               },
               {
                 href: "/regioes",

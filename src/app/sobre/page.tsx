@@ -124,6 +124,32 @@ export default function SobrePage() {
         </p>
       </section>
 
+      {/* Base do diagnóstico */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          Base do Diagnóstico
+        </h2>
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-4">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            O diagnóstico territorial que fundamenta este plano parte do trabalho realizado pela
+            <strong> Secretaria de Planejamento do Tocantins</strong>, que produziu indicadores
+            municipalizados de alta qualidade para os 139 municípios do estado.
+          </p>
+          <p className="text-gray-700 leading-relaxed mb-4">
+            A plataforma valoriza esse trabalho já feito, e vai além: complementa o diagnóstico
+            técnico com a <strong>escuta ativa da população</strong>, da academia, dos governos
+            municipais e da sociedade civil.
+          </p>
+          <p className="text-gray-800 font-semibold italic">
+            &ldquo;Vamos aproveitar e aperfeiçoar o que há de bom, e vamos mudar o que não está dando certo.&rdquo;
+          </p>
+        </div>
+        <p className="text-sm text-gray-500">
+          Os dados municipais processados estão disponíveis no repositório caderno-tocantins-2026,
+          com 9 volumes cobrindo os 139 municípios do Tocantins.
+        </p>
+      </section>
+
       {/* Fontes de dados */}
       <section className="mb-10">
         <h2 className="text-xl font-bold text-gray-900 mb-4">

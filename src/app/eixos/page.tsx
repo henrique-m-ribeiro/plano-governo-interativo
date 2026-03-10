@@ -3,7 +3,7 @@ import { eixos, getTotalPropostas } from "@/data/eixos";
 
 export const metadata = {
   title: "Eixos do Plano — Plano de Governo Interativo",
-  description: "Conheça os 7 eixos temáticos do plano de governo para o Tocantins.",
+  description: "Conheça os 10 eixos temáticos do plano de governo para o Tocantins.",
 };
 
 /**
@@ -20,7 +20,7 @@ export default function EixosPage() {
           Eixos do Plano de Governo
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl">
-          O plano está organizado em 7 eixos temáticos, cada um com diagnóstico
+          O plano está organizado em 10 eixos temáticos, cada um com diagnóstico
           territorial, indicadores-chave e propostas baseadas em dados reais dos
           139 municípios do Tocantins.
         </p>
