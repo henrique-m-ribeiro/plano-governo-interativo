@@ -1,5 +1,5 @@
 /**
- * Dados dos 7 eixos temáticos do Plano de Governo
+ * Dados dos 10 eixos temáticos do Plano de Governo
  * Cada eixo contém: identificação, problema central, indicadores-chave, propostas e cor de identidade visual
  */
 
