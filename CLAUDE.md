@@ -20,11 +20,11 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 ## Stack Técnica
 - **Framework:** Next.js 16+ (App Router) com TypeScript
 - **Estilização:** Tailwind CSS 4
-- **Mapas:** Leaflet + react-leaflet (GeoJSON dos 139 municípios)
+- **Mapas:** Leaflet + react-leaflet (planejado — atualmente placeholder, GeoJSON pendente de integração)
 - **Ícones:** lucide-react
 - **Dados:** JSONs importados do tocantins-integrado (não duplicar banco)
 - **IA/LLM:** Integração com API de LLM para assistente conversacional e processamento de contribuições
-- **Deploy:** Vercel (free tier)
+- **Deploy:** Replit (MVP atual em https://plano-governo-interativo.replit.app)
 - **Acessibilidade:** WCAG 2.1 AA obrigatório
 - **Mobile-first:** Acesso principal será por celular
 
@@ -45,10 +45,10 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 6. Segurança Pública e Cidadania
 7. Gestão Pública e Inovação (eixo transversal — convergência acadêmica)
 8. Agropecuária e Desenvolvimento Rural
-9. Mineração Sustentável
-10. Industrialização e Atração de Investimentos
+9. Economia e Emprego
+10. Cultura, Esporte e Juventude
 
-Os eixos 8, 9 e 10 refletem as vocações econômicas do Tocantins e dialogam com pautas
+Os eixos refletem as vocações econômicas e sociais do Tocantins e dialogam com pautas
 de alto engajamento no eleitorado. O diagnóstico territorial parte do trabalho da
 Secretaria de Planejamento do Tocantins (dados no repo caderno-tocantins-2026).
 
@@ -75,8 +75,23 @@ A dimensão de escuta conecta diretamente com a pesquisa de doutorado:
 - **Tom institucional:** Não partidário, baseado em evidências
 - **Performance:** Otimizado para conexões lentas (interior do TO)
 
+## Estado Atual do MVP (2026-03-20)
+- 8 páginas implementadas com dados placeholder/genéricos
+- `municipios.ts` sem cod_ibge, sem indicadores reais
+- Mapa placeholder sem GeoJSON real
+- Eixos com propostas genéricas
+- **Plano de incorporação:** `doutorado/02-pesquisa-acao/plano-incorporacao-mvp.md` (v3, 4 fases)
+- **137 indicadores reais disponíveis** no pipeline do doutorado, pendentes de integração
+
+## Governança de Ambientes
+- **Cowork (📋):** Preparação de dados, documentos-eixo, briefings, revisão
+- **Claude Code (🔧):** Codificação, scripts CSV→JSON, componentes React, build, git, deploy
+- **Handoff:** via `memory/today.md` no repo doutorado
+- **Referência:** ADR-010 em `doutorado/.claude/memory/decisions.md`
+
 ## Antes de Qualquer Tarefa
 1. Identifique qual eixo temático e qual camada (dados/conteúdo/interface) o trabalho endereça
-2. Considere a dupla leitura (valor prático + valor acadêmico)
-3. Verifique se há dados do tocantins-integrado que devem ser integrados
-4. Mantenha o design mobile-first
+2. Consulte o plano de incorporação para verificar em qual fase/etapa o trabalho se insere
+3. Considere a dupla leitura (valor prático + valor acadêmico)
+4. Verifique se há dados do pipeline (doutorado/06-dados/) que devem ser integrados
+5. Mantenha o design mobile-first
