@@ -1,72 +1,262 @@
 /**
- * Regiões de planejamento do Tocantins
- * Agrupamento dos 139 municípios em regiões para navegação
- * Fonte: Secretaria de Planejamento do Tocantins
+ * Regiões de planejamento do Tocantins (SEPLAN/SPG 2024)
+ * Gerado automaticamente por scripts/processar-pipeline.mjs
+ * 8 regionais em 3 macrorregionais (Sul, Centro, Norte)
  */
 
-export interface Regiao {
-  id: string;
+export interface Regional {
+  slug: string;
   nome: string;
-  descricao: string;
-  municipiosPrincipais: string[];
+  macrorregional: string;
+  polo: string;
   totalMunicipios: number;
-  caracteristicas: string;
+  municipios: string[];
 }
 
-export const regioes: Regiao[] = [
+export const regionais: Regional[] = [
   {
-    id: "central",
-    nome: "Região Central",
-    descricao: "Região metropolitana de Palmas e entorno",
-    municipiosPrincipais: ["Palmas", "Porto Nacional", "Paraíso do Tocantins", "Miracema do Tocantins"],
-    totalMunicipios: 25,
-    caracteristicas: "Polo administrativo e de serviços. Maior concentração de PIB e população urbana.",
+    "slug": "bico-do-papagaio",
+    "nome": "Bico do Papagaio",
+    "macrorregional": "norte",
+    "polo": "Augustinópolis/Tocantinópolis",
+    "totalMunicipios": 25,
+    "municipios": [
+      "Aguiarnópolis",
+      "Ananás",
+      "Angico",
+      "Araguatins",
+      "Augustinópolis",
+      "Axixá do Tocantins",
+      "Buriti do Tocantins",
+      "Cachoeirinha",
+      "Carrasco Bonito",
+      "Darcinópolis",
+      "Esperantina",
+      "Itaguatins",
+      "Luzinópolis",
+      "Maurilândia do Tocantins",
+      "Nazaré",
+      "Palmeiras do Tocantins",
+      "Praia Norte",
+      "Riachinho",
+      "Sampaio",
+      "Santa Terezinha do Tocantins",
+      "São Bento do Tocantins",
+      "São Miguel do Tocantins",
+      "São Sebastião do Tocantins",
+      "Sítio Novo do Tocantins",
+      "Tocantinópolis"
+    ]
   },
   {
-    id: "norte",
-    nome: "Região Norte",
-    descricao: "Região de Araguaína e norte do estado",
-    municipiosPrincipais: ["Araguaína", "Colinas do Tocantins", "Guaraí", "Tocantinópolis"],
-    totalMunicipios: 35,
-    caracteristicas: "Segundo maior polo econômico. Forte agropecuária e comércio regional.",
+    "slug": "norte",
+    "nome": "Norte",
+    "macrorregional": "norte",
+    "polo": "Araguaína",
+    "totalMunicipios": 15,
+    "municipios": [
+      "Aragominas",
+      "Araguaína",
+      "Araguanã",
+      "Babaçulândia",
+      "Barra do Ouro",
+      "Campos Lindos",
+      "Carmolândia",
+      "Filadélfia",
+      "Goiatins",
+      "Muricilândia",
+      "Nova Olinda",
+      "Piraquê",
+      "Santa Fé do Araguaia",
+      "Wanderlândia",
+      "Xambioá"
+    ]
   },
   {
-    id: "sul",
-    nome: "Região Sul",
-    descricao: "Região de Gurupi e sul do estado",
-    municipiosPrincipais: ["Gurupi", "Dianópolis", "Natividade", "Arraias"],
-    totalMunicipios: 30,
-    caracteristicas: "Terceiro polo econômico. Agropecuária e turismo histórico.",
+    "slug": "meio-norte",
+    "nome": "Meio Norte",
+    "macrorregional": "norte",
+    "polo": "Colinas do Tocantins/Guaraí",
+    "totalMunicipios": 25,
+    "municipios": [
+      "Arapoema",
+      "Bandeirantes do Tocantins",
+      "Bernardo Sayão",
+      "Bom Jesus do Tocantins",
+      "Brasilândia do Tocantins",
+      "Centenário",
+      "Colinas do Tocantins",
+      "Colméia",
+      "Couto de Magalhães",
+      "Goianorte",
+      "Guaraí",
+      "Itacajá",
+      "Itapiratins",
+      "Itaporã do Tocantins",
+      "Juarina",
+      "Palmeirante",
+      "Pau d'Arco",
+      "Pedro Afonso",
+      "Pequizeiro",
+      "Presidente Kennedy",
+      "Recursolândia",
+      "Santa Maria do Tocantins",
+      "Tabocão",
+      "Tupirama",
+      "Tupiratins"
+    ]
   },
   {
-    id: "sudeste",
-    nome: "Região Sudeste",
-    descricao: "Região do Jalapão e sudeste",
-    municipiosPrincipais: ["Taguatinga", "Ponte Alta do Tocantins", "Mateiros"],
-    totalMunicipios: 15,
-    caracteristicas: "Área de preservação ambiental (Jalapão). Turismo ecológico e comunidades tradicionais.",
+    "slug": "vale-do-araguaia",
+    "nome": "Vale do Araguaia",
+    "macrorregional": "centro",
+    "polo": "Paraíso do Tocantins",
+    "totalMunicipios": 15,
+    "municipios": [
+      "Abreulândia",
+      "Araguacema",
+      "Barrolândia",
+      "Caseara",
+      "Chapada de Areia",
+      "Cristalândia",
+      "Divinópolis do Tocantins",
+      "Dois Irmãos do Tocantins",
+      "Lagoa da Confusão",
+      "Marianópolis do Tocantins",
+      "Monte Santo do Tocantins",
+      "Nova Rosalândia",
+      "Paraíso do Tocantins",
+      "Pium",
+      "Pugmil"
+    ]
   },
   {
-    id: "bico-do-papagaio",
-    nome: "Bico do Papagaio",
-    descricao: "Extremo norte do estado, entre os rios Araguaia e Tocantins",
-    municipiosPrincipais: ["Augustinópolis", "Axixá do Tocantins", "São Miguel do Tocantins"],
-    totalMunicipios: 25,
-    caracteristicas: "Região de maior vulnerabilidade socioeconômica. Comunidades ribeirinhas e quilombolas.",
+    "slug": "central",
+    "nome": "Central",
+    "macrorregional": "centro",
+    "polo": "Palmas",
+    "totalMunicipios": 14,
+    "municipios": [
+      "Aparecida do Rio Negro",
+      "Brejinho de Nazaré",
+      "Fátima",
+      "Ipueiras",
+      "Lajeado",
+      "Miracema do Tocantins",
+      "Miranorte",
+      "Monte do Carmo",
+      "Oliveira de Fátima",
+      "Palmas",
+      "Porto Nacional",
+      "Rio dos Bois",
+      "Silvanópolis",
+      "Tocantínia"
+    ]
   },
   {
-    id: "oeste",
-    nome: "Região Oeste",
-    descricao: "Região da Ilha do Bananal e oeste do estado",
-    municipiosPrincipais: ["Formoso do Araguaia", "Lagoa da Confusão", "Cristalândia"],
-    totalMunicipios: 9,
-    caracteristicas: "Ilha do Bananal (maior ilha fluvial do mundo). Produção agropecuária irrigada.",
+    "slug": "jalapao",
+    "nome": "Jalapão",
+    "macrorregional": "centro",
+    "polo": "Ponte Alta do Tocantins",
+    "totalMunicipios": 9,
+    "municipios": [
+      "Lagoa do Tocantins",
+      "Lizarda",
+      "Mateiros",
+      "Novo Acordo",
+      "Pindorama do Tocantins",
+      "Ponte Alta do Tocantins",
+      "Rio Sono",
+      "Santa Tereza do Tocantins",
+      "São Félix do Tocantins"
+    ]
   },
+  {
+    "slug": "sul",
+    "nome": "Sul",
+    "macrorregional": "sul",
+    "polo": "Gurupi",
+    "totalMunicipios": 17,
+    "municipios": [
+      "Aliança do Tocantins",
+      "Alvorada",
+      "Araguaçu",
+      "Cariri do Tocantins",
+      "Crixás do Tocantins",
+      "Dueré",
+      "Figueirópolis",
+      "Formoso do Araguaia",
+      "Gurupi",
+      "Jaú do Tocantins",
+      "Palmeirópolis",
+      "Peixe",
+      "Sandolândia",
+      "Santa Rita do Tocantins",
+      "São Salvador do Tocantins",
+      "Sucupira",
+      "Talismã"
+    ]
+  },
+  {
+    "slug": "sudeste",
+    "nome": "Sudeste",
+    "macrorregional": "sul",
+    "polo": "Dianópolis",
+    "totalMunicipios": 19,
+    "municipios": [
+      "Almas",
+      "Arraias",
+      "Aurora do Tocantins",
+      "Chapada da Natividade",
+      "Combinado",
+      "Conceição do Tocantins",
+      "Dianópolis",
+      "Lavandeira",
+      "Natividade",
+      "Novo Alegre",
+      "Novo Jardim",
+      "Paranã",
+      "Ponte Alta do Bom Jesus",
+      "Porto Alegre do Tocantins",
+      "Rio da Conceição",
+      "Santa Rosa do Tocantins",
+      "São Valério da Natividade",
+      "Taguatinga",
+      "Taipas do Tocantins"
+    ]
+  }
 ];
 
-/**
- * Busca uma região pelo id
- */
-export function getRegiaoById(id: string): Regiao | undefined {
-  return regioes.find((r) => r.id === id);
+export const macrorregionais = {
+  "sul": {
+    "regionais": [
+      "sul",
+      "sudeste"
+    ],
+    "total_municipios": 36
+  },
+  "centro": {
+    "regionais": [
+      "vale-do-araguaia",
+      "central",
+      "jalapao"
+    ],
+    "total_municipios": 38
+  },
+  "norte": {
+    "regionais": [
+      "meio-norte",
+      "norte",
+      "bico-do-papagaio"
+    ],
+    "total_municipios": 65
+  }
+};
+
+export function getRegionalBySlug(slug: string): Regional | undefined {
+  return regionais.find(r => r.slug === slug);
+}
+
+export function getRegionaisByMacro(macro: string): Regional[] {
+  return regionais.filter(r => r.macrorregional === macro);
 }

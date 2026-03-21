@@ -141,7 +141,7 @@ export default function ParticiparPage() {
                 >
                   <option value="">Selecione seu município</option>
                   {municipios.map((m) => (
-                    <option key={m} value={m}>{m}</option>
+                    <option key={m.codIbge} value={m.nome}>{m.nome}</option>
                   ))}
                 </select>
               </div>
