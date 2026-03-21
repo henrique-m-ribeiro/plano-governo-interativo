@@ -1,16 +1,22 @@
 # Propostas de Melhoria — Fase I
 
-> Gerado durante execução da Etapa I-2 (2026-03-21)
+> Atualizado durante execução da Etapa I-2 v2 (2026-03-21)
 > Para avaliação no Cowork (📋) antes de implementação.
 
 ---
 
-## Proposta: Expandir municipiosPrincipais em regioes.ts
-**Contexto:** O arquivo `regioes.ts` lista apenas 21 municípios (3-4 por região), forçando 118 dos 139 municípios a serem atribuídos por inferência de centroide. Isso pode gerar classificações imprecisas em zonas fronteiriças entre regiões.
-**Sugestão:** Expandir `municipiosPrincipais` para incluir todos os 139 municípios nas suas regiões corretas, ou criar um mapeamento completo separado (ex: `municipio-regiao-map.json`).
-**Impacto:** Eliminaria incerteza na classificação regional. Fundamental para navegação por região no app.
-**Esforço:** Baixo (curadoria manual de ~2h com apoio de mapa)
-**Prioridade sugerida:** Próxima sessão
+## [ADOTADA] Proposta: Campo polo_regional na tabela mestra
+**Contexto:** O JSON da SEPLAN 2024 inclui o polo de cada regional (ex: "Palmas", "Araguaína", "Augustinópolis/Tocantinópolis"). Este dado enriquece a navegação e contextualiza cada município.
+**Sugestão:** Incluir campo `polo_regional` no schema de cada município.
+**Impacto:** Permite mostrar ao cidadão o polo de referência da sua região. Útil para UX de navegação.
+**Esforço:** Baixo (campo já incluso no JSON SEPLAN)
+**Status:** ✅ Adotada na v2 da Etapa I-2 (aprovada pelo usuário antes da execução).
+
+---
+
+## [SUPERADA] Proposta: Expandir municipiosPrincipais em regioes.ts
+**Contexto:** Na v1, `regioes.ts` listava apenas 21 municípios, forçando inferência por centroide.
+**Status:** ⚠️ Superada pela adoção do JSON oficial SEPLAN 2024 (ADR-011). O mapeamento agora é 100% determinístico, sem inferência. O `regioes.ts` será atualizado em etapa posterior para refletir as 8 regionais.
 
 ---
 
@@ -23,18 +29,24 @@
 
 ---
 
-## Proposta: Adicionar campo de microrregião
-**Contexto:** Os CSVs do Geoportal possuem `regiao_num` com 18 microrregiões (I–XVIII). Embora não correspondam às 6 regiões do MVP, esse dado pode ser útil para navegação mais granular.
-**Sugestão:** Incluir campo opcional `microrregiao` na tabela mestra em etapa futura, permitindo drill-down região → microrregião → município.
-**Impacto:** Navegação mais rica no app; alinhamento com planejamento estadual.
-**Esforço:** Médio (requer mapeamento microrregião → município + ajuste de UI)
-**Prioridade sugerida:** Futuro
+## [SUPERADA] Proposta: Validar classificação regional com especialista
+**Contexto:** Na v1, a inferência por centroide podia gerar classificações imprecisas.
+**Status:** ⚠️ Superada — mapeamento agora é oficial SEPLAN 2024, sem inferência. Validação implícita pela fonte.
 
 ---
 
-## Proposta: Validar classificação regional com especialista
-**Contexto:** A inferência por centroide (usada para 118 municípios) pode classificar incorretamente municípios em zonas limítrofes. Exemplos potenciais: municípios no limite central/oeste ou norte/bico-do-papagaio.
-**Sugestão:** Gerar um mapa de verificação (colorido por região atribuída) e validar com alguém que conheça a geografia do Tocantins.
-**Impacto:** Garante credibilidade dos dados regionais.
-**Esforço:** Baixo (gerar mapa com matplotlib/folium + revisão humana)
-**Prioridade sugerida:** Próxima sessão
+## Proposta: Atualizar regioes.ts para refletir 8 regionais SEPLAN
+**Contexto:** O arquivo `src/data/regioes.ts` ainda define 6 regiões arbitrárias (central, norte, sul, sudeste, bico-do-papagaio, oeste). Com a adoção do SEPLAN 2024, precisa ser atualizado para 8 regionais + 3 macrorregionais.
+**Sugestão:** Reescrever `regioes.ts` com as 8 regionais SEPLAN, incluindo todos os 139 municípios, macrorregional e polo. Manter compatibilidade com a interface `Regiao` existente.
+**Impacto:** Alinha o código do app com a fonte oficial de dados. Pré-requisito para navegação por região funcional.
+**Esforço:** Baixo
+**Prioridade sugerida:** Próxima sessão (Etapa I-3 ou similar)
+
+---
+
+## Proposta: Divergências de grafia SEPLAN vs Censo/IBGE
+**Contexto:** 3 municípios têm grafia diferente entre SEPLAN e Censo: "Couto de Magalhães"/"Couto Magalhães", "Pau d'Arco"/"Pau D'Arco", "São Valério da Natividade"/"São Valério". Resolvidos com mapeamento manual no script.
+**Sugestão:** Documentar essas divergências no pipeline de dados e considerar padronizar em um dos formatos no repo `doutorado`.
+**Impacto:** Evita erros futuros em cruzamentos de dados.
+**Esforço:** Baixo
+**Prioridade sugerida:** Futuro

@@ -2,8 +2,8 @@
 """
 Gera a tabela mestra dos 139 municípios do Tocantins.
 
-Etapa I-2 da Fase I (Dados Fundacionais).
-Fontes: Censo 2022, PIB Municipal IBGE, GeoJSON, regioes.ts
+Etapa I-2 da Fase I (Dados Fundacionais) — v2 (SEPLAN 2024).
+Fontes: Censo 2022, PIB Municipal IBGE, GeoJSON, regioes_planejamento_seplan_2024.json
 Saída: src/data/municipios_referencia.json
 
 Uso:
@@ -11,14 +11,15 @@ Uso:
 
     --dados-dir: caminho para a pasta de dados (padrão: ../doutorado/06-dados/)
                  Aceita também /tmp/doutorado-dados/ se os dados foram baixados separadamente.
+
+Mudança v1→v2: Substituição das 6 regiões arbitrárias de regioes.ts pelas 8 regionais
+oficiais da SEPLAN 2024 (ADR-011). Mapeamento 100% determinístico, zero inferência.
 """
 
 import csv
 import json
-import math
-import os
-import re
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,19 +27,23 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_DIR = SCRIPT_DIR.parent
 SAIDA_JSON = REPO_DIR / "src" / "data" / "municipios_referencia.json"
-REGIOES_TS = REPO_DIR / "src" / "data" / "regioes.ts"
 
 # Caminho padrão para dados — aceita override via argumento
 DADOS_DIR_PADRAO = REPO_DIR.parent / "doutorado" / "06-dados"
 DADOS_DIR_ALT = Path("/tmp/doutorado-dados")
 
-# Slugs válidos de região
-REGIOES_VALIDAS = {"central", "norte", "sul", "sudeste", "bico-do-papagaio", "oeste"}
+# 8 regionais oficiais SEPLAN 2024
+REGIOES_VALIDAS = {
+    "bico-do-papagaio", "norte", "meio-norte", "vale-do-araguaia",
+    "central", "jalapao", "sul", "sudeste",
+}
+
+# 3 macrorregionais oficiais SEPLAN 2024
+MACRORREGIONAIS_VALIDAS = {"norte", "centro", "sul"}
 
 
 def resolver_dados_dir():
     """Resolve o diretório de dados: argumento > padrão > alternativo."""
-    # Argumento de linha de comando
     for i, arg in enumerate(sys.argv[1:], 1):
         if arg == "--dados-dir" and i < len(sys.argv) - 1:
             caminho = Path(sys.argv[i + 1])
@@ -48,7 +53,6 @@ def resolver_dados_dir():
                 print(f"ERRO: Caminho informado não existe: {caminho}")
                 sys.exit(1)
 
-    # Caminhos padrão
     if DADOS_DIR_PADRAO.exists():
         return DADOS_DIR_PADRAO
     if DADOS_DIR_ALT.exists():
@@ -79,8 +83,8 @@ def ler_censo(dados_dir: Path) -> dict:
     return resultado
 
 
-def ler_pib(dados_dir: Path) -> dict:
-    """Lê o CSV de PIB Municipal e retorna {cod_ibge: pib_percapita} (ano mais recente)."""
+def ler_pib(dados_dir: Path):
+    """Lê o CSV de PIB Municipal e retorna ({cod_ibge: pib_percapita}, ano)."""
     caminho = dados_dir / "basedosdados" / "csv" / "economia" / "pib_municipal_ibge.csv"
     print(f"  Lendo PIB Municipal: {caminho}")
 
@@ -89,7 +93,7 @@ def ler_pib(dados_dir: Path) -> dict:
         leitor = csv.DictReader(f)
         colunas = leitor.fieldnames or []
 
-        # Encontrar a coluna pib_percapita mais recente
+        # Encontrar a coluna pib_percapita mais recente com dados válidos
         colunas_percapita = sorted(
             [c for c in colunas if c.startswith("pib_percapita_")],
             reverse=True,
@@ -98,12 +102,10 @@ def ler_pib(dados_dir: Path) -> dict:
             print("ERRO: Nenhuma coluna pib_percapita_* encontrada no CSV de PIB")
             sys.exit(1)
 
-        # Ler todas as linhas para encontrar a coluna mais recente com dados válidos
         linhas = list(leitor)
 
         col_mais_recente = None
         for col in colunas_percapita:
-            # Verificar se pelo menos 50% dos municípios têm valor numérico válido
             validos = sum(
                 1 for l in linhas
                 if l[col].strip() not in ("", "...", "-")
@@ -145,129 +147,153 @@ def ler_geojson(dados_dir: Path) -> dict:
         props = feature["properties"]
         cod = int(props["codarea"])
         centroide = props["centroide"]
-        # Garante [lon, lat] com precisão razoável
         resultado[cod] = [round(centroide[0], 6), round(centroide[1], 6)]
 
     print(f"    → {len(resultado)} features lidas")
     return resultado
 
 
-def parsear_regioes_ts() -> dict:
-    """Parseia regioes.ts e retorna {nome_municipio: slug_regiao}."""
-    print(f"  Lendo regiões: {REGIOES_TS}")
-
-    with open(REGIOES_TS, encoding="utf-8") as f:
-        conteudo = f.read()
-
-    mapeamento = {}
-
-    # Encontrar cada bloco de região com id e municipiosPrincipais
-    blocos = re.findall(
-        r'id:\s*"([^"]+)".*?municipiosPrincipais:\s*\[(.*?)\]',
-        conteudo,
-        re.DOTALL,
-    )
-
-    for slug, municipios_raw in blocos:
-        nomes = re.findall(r'"([^"]+)"', municipios_raw)
-        for nome in nomes:
-            mapeamento[nome] = slug
-        print(f"    Região '{slug}': {len(nomes)} municípios listados")
-
-    print(f"    → {len(mapeamento)} municípios mapeados diretamente por regioes.ts")
-    return mapeamento
-
-
-def distancia_euclidiana(p1, p2):
-    """Distância euclidiana simples entre dois pontos [lon, lat]."""
-    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
-
-
-def inferir_regioes_por_centroide(municipios_sem_regiao, centroides, mapeamento_nome_regiao, centroides_todos):
+def ler_regioes_seplan(dados_dir: Path):
     """
-    Infere a região dos municípios não mapeados pela proximidade
-    do centroide ao centroide médio de cada região.
-
-    Retorna {cod_ibge: slug_regiao}.
+    Lê o JSON oficial da SEPLAN 2024 e retorna:
+    - mapa_nome_regiao: {nome_municipio: slug_regional}
+    - mapa_nome_macro: {nome_municipio: slug_macrorregional}
+    - mapa_nome_polo: {nome_municipio: polo_regional}
+    - contagem_seplan: {slug_regional: total_esperado}
     """
-    # Calcular centroide médio de cada região
-    centroides_por_regiao = {}
-    for cod, centroide in centroides_todos.items():
-        # Precisamos do nome deste município para encontrar sua região
-        pass
+    caminho = dados_dir / "regioes_planejamento_seplan_2024.json"
+    print(f"  Lendo regionais SEPLAN 2024: {caminho}")
 
-    # Abordagem: usar os municípios já mapeados para calcular centroide médio
-    # Precisamos de cod_ibge→nome para cruzar com mapeamento_nome_regiao
-    return {}
+    with open(caminho, encoding="utf-8") as f:
+        dados = json.load(f)
+
+    mapa_nome_regiao = {}
+    mapa_nome_macro = {}
+    mapa_nome_polo = {}
+    contagem_seplan = {}
+
+    for slug, info in dados["regionais"].items():
+        contagem_seplan[slug] = info["total_municipios"]
+        polo = info.get("polo", "")
+        macro = info["macrorregional"]
+        print(f"    Regional '{slug}': {info['total_municipios']} municípios, polo={polo}, macro={macro}")
+
+        for nome in info["municipios"]:
+            mapa_nome_regiao[nome] = slug
+            mapa_nome_macro[nome] = macro
+            mapa_nome_polo[nome] = polo
+
+    total = sum(contagem_seplan.values())
+    print(f"    → {len(mapa_nome_regiao)} municípios mapeados (total esperado: {total})")
+
+    return mapa_nome_regiao, mapa_nome_macro, mapa_nome_polo, contagem_seplan
 
 
-def atribuir_regioes(censo, centroides, mapeamento_nome_regiao):
+def normalizar_nome(nome: str) -> str:
     """
-    Atribui região a cada município:
-    1. Por nome (via regioes.ts)
-    2. Restantes por proximidade de centroide
-    Retorna {cod_ibge: slug_regiao} e estatísticas.
+    Normaliza nome de município para comparação fuzzy.
+    Remove acentos, converte para minúsculas, remove preposições comuns.
+    """
+    # Remover acentos
+    nfkd = unicodedata.normalize("NFKD", nome)
+    sem_acento = "".join(c for c in nfkd if not unicodedata.combining(c))
+    return sem_acento.lower().strip()
+
+
+# Mapeamento manual para divergências conhecidas entre SEPLAN e Censo/IBGE
+# Chave: nome na SEPLAN, Valor: nome no Censo
+NOMES_DIVERGENTES = {
+    "Couto de Magalhães": "Couto Magalhães",
+    "Pau d'Arco": "Pau D'Arco",
+    "São Valério da Natividade": "São Valério",
+}
+
+
+def atribuir_regioes(censo, mapa_nome_regiao, mapa_nome_macro, mapa_nome_polo):
+    """
+    Atribui regional, macrorregional e polo a cada município
+    via cruzamento determinístico nome (SEPLAN) → cod_ibge (Censo).
+    Usa mapeamento manual para divergências de grafia conhecidas,
+    e fallback por normalização para divergências imprevistas.
+    Retorna {cod_ibge: {regiao, macrorregional, polo_regional}} e estatísticas.
     """
     resultado = {}
-    por_nome = 0
-    por_centroide = 0
+    mapeados = 0
+    mapeados_divergencia = 0
+    mapeados_fuzzy = 0
+    sem_match = []
 
-    # Mapa nome→cod_ibge
+    # Mapa nome→cod_ibge a partir do Censo
     nome_para_cod = {}
     cod_para_nome = {}
     for cod, dados in censo.items():
         nome_para_cod[dados["nome"]] = cod
         cod_para_nome[cod] = dados["nome"]
 
-    # Passo 1: atribuir por nome (regioes.ts)
-    for nome, slug in mapeamento_nome_regiao.items():
-        if nome in nome_para_cod:
-            cod = nome_para_cod[nome]
-            resultado[cod] = slug
-            por_nome += 1
+    # Mapa normalizado para fallback fuzzy
+    normalizado_para_cod = {}
+    for nome, cod in nome_para_cod.items():
+        normalizado_para_cod[normalizar_nome(nome)] = cod
 
-    print(f"\n  Atribuição de regiões:")
-    print(f"    Por nome (regioes.ts): {por_nome}")
+    # Cruzamento por nome
+    for nome_seplan, slug in mapa_nome_regiao.items():
+        cod = None
+        metodo = "direto"
 
-    # Passo 2: calcular centroide médio de cada região usando os já mapeados
-    soma_regioes = {}  # {slug: ([lon_sum, lat_sum], count)}
-    for cod, slug in resultado.items():
-        if cod in centroides:
-            if slug not in soma_regioes:
-                soma_regioes[slug] = [[0.0, 0.0], 0]
-            soma_regioes[slug][0][0] += centroides[cod][0]
-            soma_regioes[slug][0][1] += centroides[cod][1]
-            soma_regioes[slug][1] += 1
+        # 1. Match direto
+        if nome_seplan in nome_para_cod:
+            cod = nome_para_cod[nome_seplan]
+        # 2. Match por divergência conhecida
+        elif nome_seplan in NOMES_DIVERGENTES:
+            nome_censo = NOMES_DIVERGENTES[nome_seplan]
+            if nome_censo in nome_para_cod:
+                cod = nome_para_cod[nome_censo]
+                metodo = "divergencia"
+                print(f"    ⚠ Divergência resolvida: SEPLAN '{nome_seplan}' → Censo '{nome_censo}'")
+        # 3. Fallback: normalização (sem acentos, lowercase)
+        if cod is None:
+            norm = normalizar_nome(nome_seplan)
+            if norm in normalizado_para_cod:
+                cod = normalizado_para_cod[norm]
+                metodo = "fuzzy"
+                print(f"    ⚠ Match fuzzy: SEPLAN '{nome_seplan}' → Censo '{cod_para_nome[cod]}'")
 
-    centroide_medio = {}
-    for slug, (soma, n) in soma_regioes.items():
-        centroide_medio[slug] = [soma[0] / n, soma[1] / n]
-        print(f"    Centroide médio '{slug}': [{centroide_medio[slug][0]:.3f}, {centroide_medio[slug][1]:.3f}] (n={n})")
+        if cod is not None:
+            resultado[cod] = {
+                "regiao": slug,
+                "macrorregional": mapa_nome_macro[nome_seplan],
+                "polo_regional": mapa_nome_polo[nome_seplan],
+            }
+            if metodo == "direto":
+                mapeados += 1
+            elif metodo == "divergencia":
+                mapeados_divergencia += 1
+            else:
+                mapeados_fuzzy += 1
+        else:
+            sem_match.append(nome_seplan)
 
-    # Passo 3: municípios restantes → região mais próxima por centroide
+    # Municípios do censo sem correspondência na SEPLAN
     sem_regiao = [cod for cod in censo if cod not in resultado]
-    for cod in sem_regiao:
-        if cod not in centroides:
-            print(f"    AVISO: {cod_para_nome.get(cod, cod)} sem centroide, atribuindo à região mais próxima por fallback")
-            continue
 
-        ponto = centroides[cod]
-        menor_dist = float("inf")
-        regiao_mais_proxima = None
-
-        for slug, centro in centroide_medio.items():
-            dist = distancia_euclidiana(ponto, centro)
-            if dist < menor_dist:
-                menor_dist = dist
-                regiao_mais_proxima = slug
-
-        resultado[cod] = regiao_mais_proxima
-        por_centroide += 1
-
-    print(f"    Por centroide (inferido): {por_centroide}")
+    print(f"\n  Atribuição de regiões (SEPLAN 2024):")
+    print(f"    Mapeados por nome direto: {mapeados}")
+    print(f"    Mapeados por divergência conhecida: {mapeados_divergencia}")
+    print(f"    Mapeados por normalização fuzzy: {mapeados_fuzzy}")
     print(f"    Total mapeado: {len(resultado)}")
+    if sem_match:
+        print(f"    SEPLAN sem match no Censo ({len(sem_match)}): {sem_match}")
+    if sem_regiao:
+        nomes_sem = [cod_para_nome[c] for c in sem_regiao]
+        print(f"    Censo sem match na SEPLAN ({len(sem_regiao)}): {nomes_sem}")
 
-    return resultado, {"por_nome": por_nome, "por_centroide": por_centroide}
+    return resultado, {
+        "direto": mapeados,
+        "divergencia": mapeados_divergencia,
+        "fuzzy": mapeados_fuzzy,
+        "sem_match_seplan": sem_match,
+        "sem_match_censo": sem_regiao,
+    }
 
 
 def gerar_json(censo, pib, centroides, regioes_map, ano_pib):
@@ -276,10 +302,13 @@ def gerar_json(censo, pib, centroides, regioes_map, ano_pib):
 
     for cod in sorted(censo.keys()):
         dados_censo = censo[cod]
+        info_regiao = regioes_map.get(cod, {})
         municipio = {
             "cod_ibge": cod,
             "nome": dados_censo["nome"],
-            "regiao": regioes_map.get(cod, ""),
+            "regiao": info_regiao.get("regiao", ""),
+            "macrorregional": info_regiao.get("macrorregional", ""),
+            "polo_regional": info_regiao.get("polo_regional", ""),
             "populacao_2022": dados_censo["populacao_2022"],
             "pib_percapita": pib.get(cod),
             "centroide": centroides.get(cod),
@@ -291,10 +320,12 @@ def gerar_json(censo, pib, centroides, regioes_map, ano_pib):
         "total": len(municipios),
         "fonte_principal": "Censo 2022 (IBGE)",
         "fonte_pib": f"PIB Municipal IBGE ({ano_pib})",
+        "fonte_regioes": "SEPLAN/SPG Tocantins, 2024 (ADR-011)",
+        "regionais": 8,
+        "macrorregionais": 3,
         "municipios": municipios,
     }
 
-    # Garantir que o diretório de saída existe
     SAIDA_JSON.parent.mkdir(parents=True, exist_ok=True)
 
     with open(SAIDA_JSON, "w", encoding="utf-8") as f:
@@ -306,8 +337,8 @@ def gerar_json(censo, pib, centroides, regioes_map, ano_pib):
     return saida
 
 
-def validar(saida, centroides_geojson):
-    """Executa as 10 validações obrigatórias. Retorna (ok, relatorio)."""
+def validar(saida, centroides_geojson, contagem_seplan):
+    """Executa validações obrigatórias. Retorna (ok, relatorio, contagem_regioes)."""
     print("\n" + "=" * 60)
     print("VALIDAÇÃO")
     print("=" * 60)
@@ -325,7 +356,7 @@ def validar(saida, centroides_geojson):
     if not ok:
         erros.append(msg)
 
-    # 2. Todos com cod_ibge de 7 dígitos (17XXXXX)
+    # 2. cod_ibge de 7 dígitos (17XXXXX)
     ibges_invalidos = [m for m in municipios if not (1700000 <= m["cod_ibge"] <= 1799999)]
     ok = len(ibges_invalidos) == 0
     msg = f"{'✅' if ok else '❌'} cod_ibge 17XXXXX: {len(ibges_invalidos)} inválidos"
@@ -334,7 +365,7 @@ def validar(saida, centroides_geojson):
     if not ok:
         erros.append(msg)
 
-    # 3. Todos com nome não-vazio
+    # 3. Nomes não-vazios
     sem_nome = [m for m in municipios if not m["nome"]]
     ok = len(sem_nome) == 0
     msg = f"{'✅' if ok else '❌'} Nomes não-vazios: {len(sem_nome)} vazios"
@@ -343,10 +374,10 @@ def validar(saida, centroides_geojson):
     if not ok:
         erros.append(msg)
 
-    # 4. Todos com regiao válida
+    # 4. Regiões válidas (8 regionais SEPLAN)
     sem_regiao = [m for m in municipios if m["regiao"] not in REGIOES_VALIDAS]
     ok = len(sem_regiao) == 0
-    msg = f"{'✅' if ok else '❌'} Regiões válidas: {len(sem_regiao)} inválidas"
+    msg = f"{'✅' if ok else '❌'} Regiões válidas (8 SEPLAN): {len(sem_regiao)} inválidas"
     print(f"  {msg}")
     relatorio.append(msg)
     if not ok:
@@ -354,7 +385,25 @@ def validar(saida, centroides_geojson):
         for m in sem_regiao[:5]:
             print(f"      → {m['nome']}: '{m['regiao']}'")
 
-    # 5. Todos com populacao_2022 > 0
+    # 5. Macrorregionais válidas
+    sem_macro = [m for m in municipios if m["macrorregional"] not in MACRORREGIONAIS_VALIDAS]
+    ok = len(sem_macro) == 0
+    msg = f"{'✅' if ok else '❌'} Macrorregionais válidas (3 SEPLAN): {len(sem_macro)} inválidas"
+    print(f"  {msg}")
+    relatorio.append(msg)
+    if not ok:
+        erros.append(msg)
+
+    # 6. Polo regional não-vazio
+    sem_polo = [m for m in municipios if not m["polo_regional"]]
+    ok = len(sem_polo) == 0
+    msg = f"{'✅' if ok else '❌'} Polo regional não-vazio: {len(sem_polo)} vazios"
+    print(f"  {msg}")
+    relatorio.append(msg)
+    if not ok:
+        erros.append(msg)
+
+    # 7. População > 0
     sem_pop = [m for m in municipios if not m["populacao_2022"] or m["populacao_2022"] <= 0]
     ok = len(sem_pop) == 0
     msg = f"{'✅' if ok else '❌'} População > 0: {len(sem_pop)} inválidos"
@@ -363,7 +412,7 @@ def validar(saida, centroides_geojson):
     if not ok:
         erros.append(msg)
 
-    # 6. Todos com pib_percapita > 0
+    # 8. PIB per capita > 0
     sem_pib = [m for m in municipios if not m["pib_percapita"] or m["pib_percapita"] <= 0]
     ok = len(sem_pib) == 0
     msg = f"{'✅' if ok else '❌'} PIB per capita > 0: {len(sem_pib)} inválidos"
@@ -374,7 +423,7 @@ def validar(saida, centroides_geojson):
         for m in sem_pib[:5]:
             print(f"      → {m['nome']}: {m['pib_percapita']}")
 
-    # 7. Todos com centroide válido
+    # 9. Centroides válidos
     sem_centroide = [m for m in municipios if not m["centroide"] or len(m["centroide"]) != 2]
     ok = len(sem_centroide) == 0
     msg = f"{'✅' if ok else '❌'} Centroides válidos: {len(sem_centroide)} inválidos"
@@ -383,7 +432,7 @@ def validar(saida, centroides_geojson):
     if not ok:
         erros.append(msg)
 
-    # 8. Sem duplicatas de cod_ibge
+    # 10. Sem duplicatas de cod_ibge
     cod_ibges = [m["cod_ibge"] for m in municipios]
     duplicatas = len(cod_ibges) - len(set(cod_ibges))
     ok = duplicatas == 0
@@ -393,7 +442,7 @@ def validar(saida, centroides_geojson):
     if not ok:
         erros.append(msg)
 
-    # 9. Cruzamento com GeoJSON: 139 matches
+    # 11. Cruzamento com GeoJSON: 139 matches
     cod_json = set(m["cod_ibge"] for m in municipios)
     cod_geo = set(centroides_geojson.keys())
     matches = cod_json & cod_geo
@@ -410,14 +459,33 @@ def validar(saida, centroides_geojson):
         if so_geo:
             print(f"      Só no GeoJSON: {so_geo}")
 
-    # 10. Distribuição por região
+    # 12. Distribuição por regional confere com SEPLAN
     contagem_regioes = {}
     for m in municipios:
         r = m["regiao"]
         contagem_regioes[r] = contagem_regioes.get(r, 0) + 1
-    msg = "✅ Distribuição por região: " + ", ".join(
-        f"{k}={v}" for k, v in sorted(contagem_regioes.items())
-    )
+
+    dist_ok = True
+    for slug, esperado in contagem_seplan.items():
+        obtido = contagem_regioes.get(slug, 0)
+        if obtido != esperado:
+            dist_ok = False
+            print(f"      ❌ '{slug}': obtido={obtido}, esperado={esperado}")
+
+    msg_dist = ", ".join(f"{k}={v}" for k, v in sorted(contagem_regioes.items()))
+    msg = f"{'✅' if dist_ok else '❌'} Distribuição por regional: {msg_dist}"
+    print(f"  {msg}")
+    relatorio.append(msg)
+    if not dist_ok:
+        erros.append(msg)
+
+    # 13. Distribuição por macrorregional
+    contagem_macro = {}
+    for m in municipios:
+        mr = m["macrorregional"]
+        contagem_macro[mr] = contagem_macro.get(mr, 0) + 1
+    msg_macro = ", ".join(f"{k}={v}" for k, v in sorted(contagem_macro.items()))
+    msg = f"✅ Distribuição por macrorregional: {msg_macro}"
     print(f"  {msg}")
     relatorio.append(msg)
 
@@ -433,7 +501,7 @@ def validar(saida, centroides_geojson):
 
 def main():
     print("=" * 60)
-    print("ETAPA I-2: Tabela Mestra dos Municípios do Tocantins")
+    print("ETAPA I-2 (v2): Tabela Mestra — Regionais SEPLAN 2024")
     print("=" * 60)
 
     # Resolver diretório de dados
@@ -445,24 +513,23 @@ def main():
     censo = ler_censo(dados_dir)
     pib, ano_pib = ler_pib(dados_dir)
     centroides = ler_geojson(dados_dir)
-    mapeamento_regioes = parsear_regioes_ts()
+    mapa_regiao, mapa_macro, mapa_polo, contagem_seplan = ler_regioes_seplan(dados_dir)
 
-    # 2. Atribuir regiões
-    print("\n2. Atribuindo regiões...")
-    regioes_map, stats_regioes = atribuir_regioes(censo, centroides, mapeamento_regioes)
+    # 2. Atribuir regiões (100% determinístico via SEPLAN)
+    print("\n2. Atribuindo regiões (SEPLAN 2024)...")
+    regioes_map, stats = atribuir_regioes(censo, mapa_regiao, mapa_macro, mapa_polo)
 
     # 3. Gerar JSON
     print("\n3. Gerando JSON de saída...")
     saida = gerar_json(censo, pib, centroides, regioes_map, ano_pib)
 
     # 4. Validar
-    ok, relatorio, contagem_regioes = validar(saida, centroides)
+    ok, relatorio, contagem_regioes = validar(saida, centroides, contagem_seplan)
 
-    # Retornar informações para o briefing
     return {
         "ok": ok,
         "relatorio": relatorio,
-        "stats_regioes": stats_regioes,
+        "stats": stats,
         "contagem_regioes": contagem_regioes,
         "ano_pib": ano_pib,
         "dados_dir": str(dados_dir),
