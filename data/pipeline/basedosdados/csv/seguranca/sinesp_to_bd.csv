@@ -1,0 +1,16 @@
+ano,sigla_uf,quantidade_cvli,quantidade_feminicidio,quantidade_ocorrencia_homicidio_doloso,quantidade_vitima_homicidio_doloso,quantidade_latrocinio,quantidade_lesao_corporal_seguida_de_morte,quantidade_morte_a_esclarecer,quantidade_morte_intervencao_policial_civil_servico,quantidade_morte_intervencao_policial_civil_fora_servico,quantidade_morte_intervencao_policial_militar_servico,quantidade_morte_intervencao_policial_militar_fora_servico,quantidade_morte_violenta_intencional,quantidade_policial_civil_morto_confronto_servico,quantidade_policial_civil_morto_confronto_fora_servico,quantidade_policial_militar_morto_confronto_servico,quantidade_policial_militar_morto_confronto_fora_servico,quantidade_suicidio,quantidade_estupro,quantidade_tentativa_estupro,quantidade_furto_veiculo,quantidade_roubo_instituicao_financeira,quantidade_roubo_carga,quantidade_roubo_de_veiculo,quantidade_arma_fogo_apreendida,quantidade_registro_pessoa_desaparecida,quantidade_populacao_sistema_penitenciario,despesa_empenhada_seguranca_publica
+2007,TO,218,0,203,0,12,3,54,0,0,0,0,0,0,0,0,0,74,0,0,0,,,,0,156,0,0.0
+2008,TO,236,0,219,0,7,10,73,0,0,0,0,0,0,0,0,0,58,0,0,0,23,7,84,0,173,0,0.0
+2009,TO,262,0,242,0,13,7,90,0,0,0,0,0,0,0,0,0,67,347,66,0,9,9,125,0,223,0,0.0
+2010,TO,263,0,255,0,5,3,138,0,0,5,0,0,0,0,0,0,41,344,63,0,20,8,144,0,216,0,0.0
+2011,TO,277,0,256,0,16,5,144,1,0,2,0,280,1,0,0,0,39,363,61,0,25,11,118,0,409,0,850691364.90140688
+2012,TO,314,0,296,302,8,4,123,0,0,7,1,322,0,0,0,2,53,396,53,0,34,17,144,0,368,0,844554047.91551089
+2013,TO,318,0,287,290,20,8,155,0,0,1,0,319,0,0,0,0,59,452,65,1304,36,14,294,688,405,0,851743498.63565731
+2014,TO,350,0,313,327,14,9,114,0,0,2,1,353,1,0,0,0,54,425,51,1421,34,11,474,655,387,3233,799897111.421934
+2015,TO,385,,348,369,9,7,109,0,0,9,1,395,0,0,0,2,43,380,50,1595,26,7,564,588,225,3283,790875077.17003882
+2016,TO,446,38,417,427,14,5,125,1,0,11,3,461,0,0,0,0,46,468,42,1478,27,23,917,646,241,3468,839882380.45615256
+2017,TO,372,32,339,355,12,5,173,0,0,6,1,379,0,0,0,0,58,594,70,1544,23,8,817,677,293,3573,898651659.69014025
+2018,TO,391,6,363,368,16,7,160,1,0,12,0,404,0,0,0,1,81,648,55,1861,8,,901,905,267,4347,939626723.71327412
+2019,TO,391,10,340,361,22,8,215,1,0,15,0,407,0,0,0,0,94,778,70,1782,2,1,700,1480,229,4481,1119190085.6678231
+2020,TO,431,10,381,404,17,10,0,0,0,0,0,458,0,0,0,0,98,823,79,1458,4,3,551,711,248,4300,1059726411.65
+2021,TO,348,21,313,338,9,1,1,0,0,0,0,390,0,0,0,0,136,832,71,1220,2,,415,797,419,4205,0.0

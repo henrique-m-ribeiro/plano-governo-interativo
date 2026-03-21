@@ -1,0 +1,225 @@
+{
+  "fonte": "Secretaria do Planejamento e Orçamento - SEPLAN/SPG, 2024",
+  "documento": "Regiões de Planejamento do Estado do Tocantins",
+  "total_regionais": 8,
+  "total_municipios": 139,
+  "macrorregionais": {
+    "sul": {
+      "regionais": ["sul", "sudeste"],
+      "total_municipios": 36
+    },
+    "centro": {
+      "regionais": ["vale-do-araguaia", "central", "jalapao"],
+      "total_municipios": 38
+    },
+    "norte": {
+      "regionais": ["meio-norte", "norte", "bico-do-papagaio"],
+      "total_municipios": 65
+    }
+  },
+  "regionais": {
+    "bico-do-papagaio": {
+      "nome": "Bico do Papagaio",
+      "macrorregional": "norte",
+      "total_municipios": 25,
+      "polo": "Augustinópolis/Tocantinópolis",
+      "municipios": [
+        "Aguiarnópolis",
+        "Ananás",
+        "Angico",
+        "Araguatins",
+        "Augustinópolis",
+        "Axixá do Tocantins",
+        "Buriti do Tocantins",
+        "Cachoeirinha",
+        "Carrasco Bonito",
+        "Darcinópolis",
+        "Esperantina",
+        "Itaguatins",
+        "Luzinópolis",
+        "Maurilândia do Tocantins",
+        "Nazaré",
+        "Palmeiras do Tocantins",
+        "Praia Norte",
+        "Riachinho",
+        "Sampaio",
+        "Santa Terezinha do Tocantins",
+        "São Bento do Tocantins",
+        "São Miguel do Tocantins",
+        "São Sebastião do Tocantins",
+        "Sítio Novo do Tocantins",
+        "Tocantinópolis"
+      ]
+    },
+    "norte": {
+      "nome": "Norte",
+      "macrorregional": "norte",
+      "total_municipios": 15,
+      "polo": "Araguaína",
+      "municipios": [
+        "Aragominas",
+        "Araguaína",
+        "Araguanã",
+        "Babaçulândia",
+        "Barra do Ouro",
+        "Campos Lindos",
+        "Carmolândia",
+        "Filadélfia",
+        "Goiatins",
+        "Muricilândia",
+        "Nova Olinda",
+        "Piraquê",
+        "Santa Fé do Araguaia",
+        "Wanderlândia",
+        "Xambioá"
+      ]
+    },
+    "meio-norte": {
+      "nome": "Meio Norte",
+      "macrorregional": "norte",
+      "total_municipios": 25,
+      "polo": "Colinas do Tocantins/Guaraí",
+      "municipios": [
+        "Arapoema",
+        "Bandeirantes do Tocantins",
+        "Bernardo Sayão",
+        "Bom Jesus do Tocantins",
+        "Brasilândia do Tocantins",
+        "Centenário",
+        "Colinas do Tocantins",
+        "Colméia",
+        "Couto de Magalhães",
+        "Goianorte",
+        "Guaraí",
+        "Itacajá",
+        "Itapiratins",
+        "Itaporã do Tocantins",
+        "Juarina",
+        "Palmeirante",
+        "Pau d'Arco",
+        "Pedro Afonso",
+        "Pequizeiro",
+        "Presidente Kennedy",
+        "Recursolândia",
+        "Santa Maria do Tocantins",
+        "Tabocão",
+        "Tupirama",
+        "Tupiratins"
+      ]
+    },
+    "vale-do-araguaia": {
+      "nome": "Vale do Araguaia",
+      "macrorregional": "centro",
+      "total_municipios": 15,
+      "polo": "Paraíso do Tocantins",
+      "municipios": [
+        "Abreulândia",
+        "Araguacema",
+        "Barrolândia",
+        "Caseara",
+        "Chapada de Areia",
+        "Cristalândia",
+        "Divinópolis do Tocantins",
+        "Dois Irmãos do Tocantins",
+        "Lagoa da Confusão",
+        "Marianópolis do Tocantins",
+        "Monte Santo do Tocantins",
+        "Nova Rosalândia",
+        "Paraíso do Tocantins",
+        "Pium",
+        "Pugmil"
+      ]
+    },
+    "central": {
+      "nome": "Central",
+      "macrorregional": "centro",
+      "total_municipios": 14,
+      "polo": "Palmas",
+      "municipios": [
+        "Aparecida do Rio Negro",
+        "Brejinho de Nazaré",
+        "Fátima",
+        "Ipueiras",
+        "Lajeado",
+        "Miracema do Tocantins",
+        "Miranorte",
+        "Monte do Carmo",
+        "Oliveira de Fátima",
+        "Palmas",
+        "Porto Nacional",
+        "Rio dos Bois",
+        "Silvanópolis",
+        "Tocantínia"
+      ]
+    },
+    "jalapao": {
+      "nome": "Jalapão",
+      "macrorregional": "centro",
+      "total_municipios": 9,
+      "polo": "Ponte Alta do Tocantins",
+      "municipios": [
+        "Lagoa do Tocantins",
+        "Lizarda",
+        "Mateiros",
+        "Novo Acordo",
+        "Pindorama do Tocantins",
+        "Ponte Alta do Tocantins",
+        "Rio Sono",
+        "Santa Tereza do Tocantins",
+        "São Félix do Tocantins"
+      ]
+    },
+    "sul": {
+      "nome": "Sul",
+      "macrorregional": "sul",
+      "total_municipios": 17,
+      "polo": "Gurupi",
+      "municipios": [
+        "Aliança do Tocantins",
+        "Alvorada",
+        "Araguaçu",
+        "Cariri do Tocantins",
+        "Crixás do Tocantins",
+        "Dueré",
+        "Figueirópolis",
+        "Formoso do Araguaia",
+        "Gurupi",
+        "Jaú do Tocantins",
+        "Palmeirópolis",
+        "Peixe",
+        "Sandolândia",
+        "Santa Rita do Tocantins",
+        "São Salvador do Tocantins",
+        "Sucupira",
+        "Talismã"
+      ]
+    },
+    "sudeste": {
+      "nome": "Sudeste",
+      "macrorregional": "sul",
+      "total_municipios": 19,
+      "polo": "Dianópolis",
+      "municipios": [
+        "Almas",
+        "Arraias",
+        "Aurora do Tocantins",
+        "Chapada da Natividade",
+        "Combinado",
+        "Conceição do Tocantins",
+        "Dianópolis",
+        "Lavandeira",
+        "Natividade",
+        "Novo Alegre",
+        "Novo Jardim",
+        "Paranã",
+        "Ponte Alta do Bom Jesus",
+        "Porto Alegre do Tocantins",
+        "Rio da Conceição",
+        "Santa Rosa do Tocantins",
+        "São Valério da Natividade",
+        "Taguatinga",
+        "Taipas do Tocantins"
+      ]
+    }
+  }
+}
