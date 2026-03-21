@@ -1,0 +1,41 @@
+# Prompt para Claude Code — Sessão 2: Etapa I-2 (Tabela Mestra de Municípios)
+
+> Repositório: `plano-governo-interativo`
+> Copie o texto abaixo (entre as linhas de código) e cole como primeiro prompt no Claude Code.
+
+---
+
+## Prompt de entrada
+
+```
+Estou iniciando uma sessão de execução preparada pelo Cowork (📋). Antes de qualquer ação, leia este arquivo:
+
+1. `.claude/memory/handoff-cowork-para-claude-code.md` — instruções completas de handoff (fontes de dados, schema de saída, mapeamento de regiões, checklist de entrega)
+
+Após ler, apresente-me um plano de execução resumido (5-8 itens) e peça confirmação antes de começar a codificar.
+
+Contexto rápido: você vai criar 1 script Python e gerar 1 JSON (tabela mestra dos 139 municípios do Tocantins com 8 regionais oficiais da SEPLAN). Os dados de entrada estão no repo irmão ../doutorado/06-dados/ (ou via GitHub raw se não acessível localmente). IMPORTANTE: o mapeamento de regiões mudou — agora são 8 regionais + 3 macrorregionais, conforme ADR-011. O arquivo de referência é `../doutorado/06-dados/regioes_planejamento_seplan_2024.json`. Se identificar melhorias, registre em `.claude/memory/propostas-melhorias-fase-i.md`.
+```
+
+---
+
+## Notas para o usuário (Henrique)
+
+### Pré-requisito:
+- A **Sessão 1** (Etapa I-1 no repo `doutorado`) deve ter sido executada e os arquivos commitados/pushados
+
+### Antes de colar o prompt:
+1. Abra o **GitHub Desktop** e faça commit + push dos arquivos em `plano-governo-interativo/.claude/memory/`:
+   - `handoff-cowork-para-claude-code.md` (NOVO)
+   - `prompt-claude-code-fase-i.md` (NOVO — este arquivo)
+2. No Claude Code, certifique-se de estar no repositório `plano-governo-interativo`
+
+### Após a execução:
+1. Faça commit + push dos novos arquivos via GitHub Desktop
+2. Volte ao **Cowork** para validação (Bloco C)
+
+### Saída esperada desta sessão:
+- `scripts/gerar_municipios_referencia.py`
+- `src/data/municipios_referencia.json` (139 municípios)
+- `.claude/memory/propostas-melhorias-fase-i.md`
+- `.claude/memory/today.md` (criado)

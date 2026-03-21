@@ -79,6 +79,7 @@ A Etapa I-1 (inventário) já foi concluída no repo `doutorado`. Principais ach
       "cod_ibge": 1700251,
       "nome": "Abreulândia",
       "regiao": "central",
+      "macrorregional": "centro",
       "populacao_2022": 2540,
       "pib_percapita": 25430.50,
       "centroide": [-49.309, -9.481]
@@ -93,7 +94,8 @@ A Etapa I-1 (inventário) já foi concluída no repo `doutorado`. Principais ach
 |-------|------|-----------|
 | `cod_ibge` | number | Código IBGE de 7 dígitos (17XXXXX) |
 | `nome` | string | Nome oficial com acentos |
-| `regiao` | string | Slug da região de planejamento (central, norte, sul, sudeste, bico-do-papagaio, oeste) |
+| `regiao` | string | Slug da regional de planejamento SEPLAN (uma das 8: bico-do-papagaio, norte, meio-norte, vale-do-araguaia, central, jalapao, sul, sudeste) |
+| `macrorregional` | string | Macrorregional SEPLAN (norte, centro, sul) |
 | `populacao_2022` | number | População do Censo 2022 |
 | `pib_percapita` | number | PIB per capita mais recente (R$) |
 | `centroide` | [number, number] | [longitude, latitude] do GeoJSON |
@@ -101,33 +103,49 @@ A Etapa I-1 (inventário) já foi concluída no repo `doutorado`. Principais ach
 ### Script auxiliar: `scripts/gerar_municipios_referencia.py`
 
 Criar na raiz `scripts/` deste repo (criar a pasta se não existir). O script deve:
-- Ler as 3 fontes de dados do repo irmão
-- Ler `regioes.ts` para mapeamento de regiões (parsear o TypeScript ou usar regex)
-- Cruzar por cod_ibge
-- Gerar o JSON de saída
+- Ler as 3 fontes de dados do repo irmão (Censo, PIB, GeoJSON)
+- Ler o JSON oficial de regiões SEPLAN: `../doutorado/06-dados/regioes_planejamento_seplan_2024.json`
+- **NÃO usar `regioes.ts`** para mapeamento — usar a fonte SEPLAN (ADR-011)
+- Cruzar por nome de município (normalizar acentos/casing para match)
+- Gerar o JSON de saída com campo `regiao` (regional SEPLAN) e `macrorregional`
 - Ser idempotente (rodar N vezes, mesmo resultado)
+- Normalizar grafias: "Pau d'Arco" (não "Pau D'Arco"), "São Valério da Natividade" (não "São Valério"), "Couto de Magalhães" (não "Couto Magalhães")
 
 ---
 
-## 5. Mapeamento de regiões de planejamento
+## 5. Mapeamento de regiões de planejamento (ADR-011)
 
-As 6 regiões do MVP (conforme `src/data/regioes.ts`):
+**FONTE OFICIAL:** O mapeamento dos 139 municípios está no arquivo JSON:
+```
+../doutorado/06-dados/regioes_planejamento_seplan_2024.json
+```
 
-| Região (slug) | Região (nome) | Municípios principais |
-|---|---|---|
-| `central` | Central | Palmas, Paraíso do Tocantins, Porto Nacional... (25 mun) |
-| `norte` | Norte | Araguaína, Colinas do Tocantins... (35 mun) |
-| `sul` | Sul | Gurupi, Formoso do Araguaia... (30 mun) |
-| `sudeste` | Sudeste | Dianópolis, Natividade... (15 mun) |
-| `bico-do-papagaio` | Bico do Papagaio | Augustinópolis, Tocantinópolis... (25 mun) |
-| `oeste` | Oeste | Pedro Afonso, Itacajá... (9 mun) |
+Este arquivo foi extraído do documento oficial "Regiões de Planejamento do Estado do Tocantins" (SEPLAN/SPG, 2024). Contém 8 regionais agrupadas em 3 macrorregionais:
 
-**ATENÇÃO:** A coluna `regiao_num` dos CSVs do Geoportal contém 18 microrregiões (I–XVIII), NÃO as 6 regiões acima. Não usar `regiao_num` diretamente.
+| Macrorregional | Regional (slug) | Regional (nome) | Municípios |
+|---|---|---|---|
+| norte | `bico-do-papagaio` | Bico do Papagaio | 25 |
+| norte | `norte` | Norte | 15 |
+| norte | `meio-norte` | Meio Norte | 25 |
+| centro | `vale-do-araguaia` | Vale do Araguaia | 15 |
+| centro | `central` | Central | 14 |
+| centro | `jalapao` | Jalapão | 9 |
+| sul | `sul` | Sul | 17 |
+| sul | `sudeste` | Sudeste | 19 |
+
+**IMPORTANTE:** NÃO usar `regioes.ts` para mapeamento. O `regioes.ts` atual tem 6 regiões arbitrárias (incluindo "oeste" que não existe oficialmente) e será reescrito em etapa posterior.
 
 **Estratégia de mapeamento:**
-1. Primeiro: atribuir região a partir de `regioes.ts` (municípios listados em `municipiosPrincipais`)
-2. Restantes: inferir pela proximidade do centroide ao centroide médio de cada região
-3. Documentar quantos municípios foram atribuídos por cada método
+1. Ler `regioes_planejamento_seplan_2024.json` do repo irmão
+2. Fazer match por nome de município (normalizar acentos e casing)
+3. Atribuir `regiao` (slug da regional) e `macrorregional` (norte/centro/sul)
+4. Todos os 139 municípios devem ter match direto — sem inferência por centroide
+5. Documentar os 3 casos de divergência de grafia (Pau d'Arco, São Valério da Natividade, Couto de Magalhães)
+
+**Se o JSON SEPLAN não estiver acessível** (arquivo não encontrado em `../doutorado/`), baixe de:
+```
+https://raw.githubusercontent.com/henrique-m-ribeiro/doutorado/main/06-dados/regioes_planejamento_seplan_2024.json
+```
 
 ---
 
@@ -207,7 +225,8 @@ Ao concluir, criar/atualizar `.claude/memory/today.md` com:
 - [ ] Exatamente 139 registros no array `municipios`
 - [ ] Todos com `cod_ibge` de 7 dígitos (17XXXXX)
 - [ ] Todos com `nome` não-vazio
-- [ ] Todos com `regiao` não-vazia (uma das 6 regiões do MVP)
+- [ ] Todos com `regiao` não-vazia (uma das 8 regionais SEPLAN)
+- [ ] Todos com `macrorregional` não-vazia (norte, centro ou sul)
 - [ ] Todos com `populacao_2022` > 0
 - [ ] Todos com `pib_percapita` > 0
 - [ ] Todos com `centroide` [lon, lat] válido
@@ -222,7 +241,9 @@ Ao concluir, criar/atualizar `.claude/memory/today.md` com:
 | Item | Valor |
 |------|-------|
 | Municípios TO | 139 (todos cod_ibge 17XXXXX) |
-| Regiões MVP | 6 (central, norte, sul, sudeste, bico-do-papagaio, oeste) |
+| Regionais SEPLAN | 8 (bico-do-papagaio, norte, meio-norte, vale-do-araguaia, central, jalapao, sul, sudeste) |
+| Macrorregionais | 3 (norte=65 mun, centro=38 mun, sul=36 mun) |
+| Ref. regiões | `../doutorado/06-dados/regioes_planejamento_seplan_2024.json` (ADR-011) |
 | Repo de dados | `../doutorado/06-dados/` (repo irmão) |
 | GeoJSON | `../doutorado/06-dados/geojson/tocantins-municipios.geojson` (139 features, prop `codarea`) |
 | Encoding padrão | UTF-8 BOM (utf-8-sig) |
