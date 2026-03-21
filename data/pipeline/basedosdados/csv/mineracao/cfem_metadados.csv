@@ -1,0 +1,18 @@
+﻿Unnamed: 0,Unnamed: 1,Unnamed: 2
+,Título,Compensação Financeira pela Exploração de Recursos Minerais (CFEM)
+,Descrição,"Dados sobre Compensação Financeira pela Exploração de Recursos Minerais (CFEM). O conjunto de dados está separado em recursos de acordo com os temas: arrecadação, autuação e distribuição. Para os dados de distribuição da CFEM, por conta do grande volume de registros, estão disponíveis arquivo único contendo todos os registros da base de dados e arquivos com dados segmentados por intervalo de anos."
+,Catálogo origem,https://app.anm.gov.br/dadosabertos/ARRECADACAO/
+,Órgão responsável,Agência Nacional de Mineração - ANM
+,Categorias no VCGE,Administração (18); Normas e Fiscalização (137); Indústria (10); Mineração (136)
+,Recursos,CFEM_Arrecadacao.csv
+,,CFEM_Arrecadacao_2002_2006.csv
+,,CFEM_Arrecadacao_2007_2011.csv
+,,CFEM_Arrecadacao_2012_2016.csv
+,,CFEM_Arrecadacao_2017_2021.csv
+,,CFEM_Arrecadacao_2022_2026.csv
+,,CFEM_Autuacao.csv
+,,CFEM_Distribuicao.csv
+,Etiquetas,"CFEM, Compensação Financeira pela Exploração de Recursos Minerais, Dados Abertos, ANM"
+,Autoria,Gerência de Receitas - GEREC/SAR
+,Documentação,https://app.anm.gov.br/dadosabertos/ARRECADACAO/metadados-cfem.ods
+,Frequência de atualização,Diária
