@@ -1,13 +1,18 @@
 {
-  "gerado_em": "2026-03-21T01:41:06.490675+00:00",
+  "gerado_em": "2026-03-21T02:47:30.421072+00:00",
   "total": 139,
   "fonte_principal": "Censo 2022 (IBGE)",
   "fonte_pib": "PIB Municipal IBGE (2021)",
+  "fonte_regioes": "SEPLAN/SPG Tocantins, 2024 (ADR-011)",
+  "regionais": 8,
+  "macrorregionais": 3,
   "municipios": [
     {
       "cod_ibge": 1700251,
       "nome": "Abreulândia",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 2576,
       "pib_percapita": 74730.0,
       "centroide": [
@@ -19,6 +24,8 @@
       "cod_ibge": 1700301,
       "nome": "Aguiarnópolis",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 4497,
       "pib_percapita": 17292.0,
       "centroide": [
@@ -29,7 +36,9 @@
     {
       "cod_ibge": 1700350,
       "nome": "Aliança do Tocantins",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 5147,
       "pib_percapita": 472909.0,
       "centroide": [
@@ -41,6 +50,8 @@
       "cod_ibge": 1700400,
       "nome": "Almas",
       "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 6499,
       "pib_percapita": 183498.0,
       "centroide": [
@@ -51,7 +62,9 @@
     {
       "cod_ibge": 1700707,
       "nome": "Alvorada",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 8802,
       "pib_percapita": 152194.0,
       "centroide": [
@@ -63,6 +76,8 @@
       "cod_ibge": 1701002,
       "nome": "Ananás",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 10325,
       "pib_percapita": 42527.0,
       "centroide": [
@@ -74,6 +89,8 @@
       "cod_ibge": 1701051,
       "nome": "Angico",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 2876,
       "pib_percapita": 10234.0,
       "centroide": [
@@ -85,6 +102,8 @@
       "cod_ibge": 1701101,
       "nome": "Aparecida do Rio Negro",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 4856,
       "pib_percapita": 161633.0,
       "centroide": [
@@ -96,6 +115,8 @@
       "cod_ibge": 1701309,
       "nome": "Aragominas",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 5290,
       "pib_percapita": 43334.0,
       "centroide": [
@@ -106,7 +127,9 @@
     {
       "cod_ibge": 1701903,
       "nome": "Araguacema",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 5927,
       "pib_percapita": 148350.0,
       "centroide": [
@@ -117,7 +140,9 @@
     {
       "cod_ibge": 1702000,
       "nome": "Araguaçu",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 8133,
       "pib_percapita": 200286.0,
       "centroide": [
@@ -129,6 +154,8 @@
       "cod_ibge": 1702109,
       "nome": "Araguaína",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 171301,
       "pib_percapita": 112274.0,
       "centroide": [
@@ -140,6 +167,8 @@
       "cod_ibge": 1702158,
       "nome": "Araguanã",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 4310,
       "pib_percapita": 39949.0,
       "centroide": [
@@ -151,6 +180,8 @@
       "cod_ibge": 1702208,
       "nome": "Araguatins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 31918,
       "pib_percapita": 97870.0,
       "centroide": [
@@ -161,7 +192,9 @@
     {
       "cod_ibge": 1702307,
       "nome": "Arapoema",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 5550,
       "pib_percapita": 60824.0,
       "centroide": [
@@ -172,7 +205,9 @@
     {
       "cod_ibge": 1702406,
       "nome": "Arraias",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 10287,
       "pib_percapita": 82975.0,
       "centroide": [
@@ -184,6 +219,8 @@
       "cod_ibge": 1702554,
       "nome": "Augustinópolis",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 17484,
       "pib_percapita": 27450.0,
       "centroide": [
@@ -194,7 +231,9 @@
     {
       "cod_ibge": 1702703,
       "nome": "Aurora do Tocantins",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 3342,
       "pib_percapita": 19176.0,
       "centroide": [
@@ -206,6 +245,8 @@
       "cod_ibge": 1702901,
       "nome": "Axixá do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 10262,
       "pib_percapita": 21290.0,
       "centroide": [
@@ -217,6 +258,8 @@
       "cod_ibge": 1703008,
       "nome": "Babaçulândia",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 7880,
       "pib_percapita": 57534.0,
       "centroide": [
@@ -227,7 +270,9 @@
     {
       "cod_ibge": 1703057,
       "nome": "Bandeirantes do Tocantins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 3407,
       "pib_percapita": 52114.0,
       "centroide": [
@@ -239,6 +284,8 @@
       "cod_ibge": 1703073,
       "nome": "Barra do Ouro",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 4476,
       "pib_percapita": 60887.0,
       "centroide": [
@@ -249,7 +296,9 @@
     {
       "cod_ibge": 1703107,
       "nome": "Barrolândia",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 4846,
       "pib_percapita": 32502.0,
       "centroide": [
@@ -260,7 +309,9 @@
     {
       "cod_ibge": 1703206,
       "nome": "Bernardo Sayão",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 4229,
       "pib_percapita": 42800.0,
       "centroide": [
@@ -271,7 +322,9 @@
     {
       "cod_ibge": 1703305,
       "nome": "Bom Jesus do Tocantins",
-      "regiao": "central",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 4038,
       "pib_percapita": 83369.0,
       "centroide": [
@@ -282,7 +335,9 @@
     {
       "cod_ibge": 1703602,
       "nome": "Brasilândia do Tocantins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 1974,
       "pib_percapita": 13936.0,
       "centroide": [
@@ -294,6 +349,8 @@
       "cod_ibge": 1703701,
       "nome": "Brejinho de Nazaré",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 4725,
       "pib_percapita": 195158.0,
       "centroide": [
@@ -305,6 +362,8 @@
       "cod_ibge": 1703800,
       "nome": "Buriti do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 10307,
       "pib_percapita": 44530.0,
       "centroide": [
@@ -316,6 +375,8 @@
       "cod_ibge": 1703826,
       "nome": "Cachoeirinha",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 1961,
       "pib_percapita": 28901.0,
       "centroide": [
@@ -327,6 +388,8 @@
       "cod_ibge": 1703842,
       "nome": "Campos Lindos",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 8653,
       "pib_percapita": 706472.0,
       "centroide": [
@@ -337,7 +400,9 @@
     {
       "cod_ibge": 1703867,
       "nome": "Cariri do Tocantins",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 4007,
       "pib_percapita": 102971.0,
       "centroide": [
@@ -349,6 +414,8 @@
       "cod_ibge": 1703883,
       "nome": "Carmolândia",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 2201,
       "pib_percapita": 30368.0,
       "centroide": [
@@ -360,6 +427,8 @@
       "cod_ibge": 1703891,
       "nome": "Carrasco Bonito",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 3318,
       "pib_percapita": 9490.0,
       "centroide": [
@@ -370,7 +439,9 @@
     {
       "cod_ibge": 1703909,
       "nome": "Caseara",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 4847,
       "pib_percapita": 284574.0,
       "centroide": [
@@ -381,7 +452,9 @@
     {
       "cod_ibge": 1704105,
       "nome": "Centenário",
-      "regiao": "central",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 2131,
       "pib_percapita": 30023.0,
       "centroide": [
@@ -392,7 +465,9 @@
     {
       "cod_ibge": 1704600,
       "nome": "Chapada de Areia",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 1501,
       "pib_percapita": 19794.0,
       "centroide": [
@@ -403,7 +478,9 @@
     {
       "cod_ibge": 1705102,
       "nome": "Chapada da Natividade",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 3117,
       "pib_percapita": 83513.0,
       "centroide": [
@@ -414,7 +491,9 @@
     {
       "cod_ibge": 1705508,
       "nome": "Colinas do Tocantins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 34233,
       "pib_percapita": 92361.0,
       "centroide": [
@@ -425,7 +504,9 @@
     {
       "cod_ibge": 1705557,
       "nome": "Combinado",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 4756,
       "pib_percapita": 11156.0,
       "centroide": [
@@ -436,7 +517,9 @@
     {
       "cod_ibge": 1705607,
       "nome": "Conceição do Tocantins",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 3887,
       "pib_percapita": 15023.0,
       "centroide": [
@@ -447,7 +530,9 @@
     {
       "cod_ibge": 1706001,
       "nome": "Couto Magalhães",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 5331,
       "pib_percapita": 87040.0,
       "centroide": [
@@ -458,7 +543,9 @@
     {
       "cod_ibge": 1706100,
       "nome": "Cristalândia",
-      "regiao": "oeste",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 6371,
       "pib_percapita": 80891.0,
       "centroide": [
@@ -469,7 +556,9 @@
     {
       "cod_ibge": 1706258,
       "nome": "Crixás do Tocantins",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 1470,
       "pib_percapita": 47272.0,
       "centroide": [
@@ -480,7 +569,9 @@
     {
       "cod_ibge": 1706506,
       "nome": "Darcinópolis",
-      "regiao": "norte",
+      "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 5827,
       "pib_percapita": 126582.0,
       "centroide": [
@@ -491,7 +582,9 @@
     {
       "cod_ibge": 1707009,
       "nome": "Dianópolis",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 17739,
       "pib_percapita": 237538.0,
       "centroide": [
@@ -502,7 +595,9 @@
     {
       "cod_ibge": 1707108,
       "nome": "Divinópolis do Tocantins",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 7024,
       "pib_percapita": 134264.0,
       "centroide": [
@@ -513,7 +608,9 @@
     {
       "cod_ibge": 1707207,
       "nome": "Dois Irmãos do Tocantins",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 6327,
       "pib_percapita": 95410.0,
       "centroide": [
@@ -524,7 +621,9 @@
     {
       "cod_ibge": 1707306,
       "nome": "Dueré",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 4248,
       "pib_percapita": 130341.0,
       "centroide": [
@@ -536,6 +635,8 @@
       "cod_ibge": 1707405,
       "nome": "Esperantina",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 7530,
       "pib_percapita": 18028.0,
       "centroide": [
@@ -547,6 +648,8 @@
       "cod_ibge": 1707553,
       "nome": "Fátima",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 3467,
       "pib_percapita": 24583.0,
       "centroide": [
@@ -557,7 +660,9 @@
     {
       "cod_ibge": 1707652,
       "nome": "Figueirópolis",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 5211,
       "pib_percapita": 123292.0,
       "centroide": [
@@ -569,6 +674,8 @@
       "cod_ibge": 1707702,
       "nome": "Filadélfia",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 7712,
       "pib_percapita": 41004.0,
       "centroide": [
@@ -579,7 +686,9 @@
     {
       "cod_ibge": 1708205,
       "nome": "Formoso do Araguaia",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 18881,
       "pib_percapita": 1071674.0,
       "centroide": [
@@ -590,7 +699,9 @@
     {
       "cod_ibge": 1708254,
       "nome": "Tabocão",
-      "regiao": "central",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 3455,
       "pib_percapita": 54094.0,
       "centroide": [
@@ -601,7 +712,9 @@
     {
       "cod_ibge": 1708304,
       "nome": "Goianorte",
-      "regiao": "central",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 4738,
       "pib_percapita": 90653.0,
       "centroide": [
@@ -613,6 +726,8 @@
       "cod_ibge": 1709005,
       "nome": "Goiatins",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 12433,
       "pib_percapita": 95969.0,
       "centroide": [
@@ -623,7 +738,9 @@
     {
       "cod_ibge": 1709302,
       "nome": "Guaraí",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 24775,
       "pib_percapita": 146991.0,
       "centroide": [
@@ -635,6 +752,8 @@
       "cod_ibge": 1709500,
       "nome": "Gurupi",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 85125,
       "pib_percapita": 135884.0,
       "centroide": [
@@ -646,6 +765,8 @@
       "cod_ibge": 1709807,
       "nome": "Ipueiras",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 1590,
       "pib_percapita": 20271.0,
       "centroide": [
@@ -656,7 +777,9 @@
     {
       "cod_ibge": 1710508,
       "nome": "Itacajá",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 6819,
       "pib_percapita": 91064.0,
       "centroide": [
@@ -668,6 +791,8 @@
       "cod_ibge": 1710706,
       "nome": "Itaguatins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 5172,
       "pib_percapita": 22952.0,
       "centroide": [
@@ -678,7 +803,9 @@
     {
       "cod_ibge": 1710904,
       "nome": "Itapiratins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 3577,
       "pib_percapita": 117489.0,
       "centroide": [
@@ -689,7 +816,9 @@
     {
       "cod_ibge": 1711100,
       "nome": "Itaporã do Tocantins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 2404,
       "pib_percapita": 37274.0,
       "centroide": [
@@ -701,6 +830,8 @@
       "cod_ibge": 1711506,
       "nome": "Jaú do Tocantins",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 3334,
       "pib_percapita": 46737.0,
       "centroide": [
@@ -711,7 +842,9 @@
     {
       "cod_ibge": 1711803,
       "nome": "Juarina",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 2243,
       "pib_percapita": 15719.0,
       "centroide": [
@@ -722,7 +855,9 @@
     {
       "cod_ibge": 1711902,
       "nome": "Lagoa da Confusão",
-      "regiao": "oeste",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 15288,
       "pib_percapita": 507608.0,
       "centroide": [
@@ -733,7 +868,9 @@
     {
       "cod_ibge": 1711951,
       "nome": "Lagoa do Tocantins",
-      "regiao": "central",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 3516,
       "pib_percapita": 42219.0,
       "centroide": [
@@ -745,6 +882,8 @@
       "cod_ibge": 1712009,
       "nome": "Lajeado",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 3357,
       "pib_percapita": 4020.0,
       "centroide": [
@@ -755,7 +894,9 @@
     {
       "cod_ibge": 1712157,
       "nome": "Lavandeira",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 1626,
       "pib_percapita": 14773.0,
       "centroide": [
@@ -766,7 +907,9 @@
     {
       "cod_ibge": 1712405,
       "nome": "Lizarda",
-      "regiao": "central",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 2999,
       "pib_percapita": 29042.0,
       "centroide": [
@@ -778,6 +921,8 @@
       "cod_ibge": 1712454,
       "nome": "Luzinópolis",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 2717,
       "pib_percapita": 26177.0,
       "centroide": [
@@ -788,7 +933,9 @@
     {
       "cod_ibge": 1712504,
       "nome": "Marianópolis do Tocantins",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 4615,
       "pib_percapita": 159191.0,
       "centroide": [
@@ -799,7 +946,9 @@
     {
       "cod_ibge": 1712702,
       "nome": "Mateiros",
-      "regiao": "sudeste",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 2748,
       "pib_percapita": 192768.0,
       "centroide": [
@@ -811,6 +960,8 @@
       "cod_ibge": 1712801,
       "nome": "Maurilândia do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 3095,
       "pib_percapita": 14513.0,
       "centroide": [
@@ -822,6 +973,8 @@
       "cod_ibge": 1713205,
       "nome": "Miracema do Tocantins",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 18566,
       "pib_percapita": 189527.0,
       "centroide": [
@@ -833,6 +986,8 @@
       "cod_ibge": 1713304,
       "nome": "Miranorte",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 12701,
       "pib_percapita": 111836.0,
       "centroide": [
@@ -844,6 +999,8 @@
       "cod_ibge": 1713601,
       "nome": "Monte do Carmo",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 5694,
       "pib_percapita": 205037.0,
       "centroide": [
@@ -854,7 +1011,9 @@
     {
       "cod_ibge": 1713700,
       "nome": "Monte Santo do Tocantins",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 2396,
       "pib_percapita": 43077.0,
       "centroide": [
@@ -866,6 +1025,8 @@
       "cod_ibge": 1713809,
       "nome": "Palmeiras do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 4872,
       "pib_percapita": 27401.0,
       "centroide": [
@@ -877,6 +1038,8 @@
       "cod_ibge": 1713957,
       "nome": "Muricilândia",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 3367,
       "pib_percapita": 28175.0,
       "centroide": [
@@ -887,7 +1050,9 @@
     {
       "cod_ibge": 1714203,
       "nome": "Natividade",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 8754,
       "pib_percapita": 50943.0,
       "centroide": [
@@ -899,6 +1064,8 @@
       "cod_ibge": 1714302,
       "nome": "Nazaré",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 4521,
       "pib_percapita": 12437.0,
       "centroide": [
@@ -910,6 +1077,8 @@
       "cod_ibge": 1714880,
       "nome": "Nova Olinda",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 10367,
       "pib_percapita": 33226.0,
       "centroide": [
@@ -920,7 +1089,9 @@
     {
       "cod_ibge": 1715002,
       "nome": "Nova Rosalândia",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 3362,
       "pib_percapita": 49602.0,
       "centroide": [
@@ -931,7 +1102,9 @@
     {
       "cod_ibge": 1715101,
       "nome": "Novo Acordo",
-      "regiao": "central",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 3969,
       "pib_percapita": 27014.0,
       "centroide": [
@@ -942,7 +1115,9 @@
     {
       "cod_ibge": 1715150,
       "nome": "Novo Alegre",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 1846,
       "pib_percapita": 9297.0,
       "centroide": [
@@ -954,6 +1129,8 @@
       "cod_ibge": 1715259,
       "nome": "Novo Jardim",
       "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 2230,
       "pib_percapita": 9617.0,
       "centroide": [
@@ -965,6 +1142,8 @@
       "cod_ibge": 1715507,
       "nome": "Oliveira de Fátima",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 1164,
       "pib_percapita": 10866.0,
       "centroide": [
@@ -975,7 +1154,9 @@
     {
       "cod_ibge": 1715705,
       "nome": "Palmeirante",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 4798,
       "pib_percapita": 85088.0,
       "centroide": [
@@ -987,6 +1168,8 @@
       "cod_ibge": 1715754,
       "nome": "Palmeirópolis",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 6975,
       "pib_percapita": 54230.0,
       "centroide": [
@@ -997,7 +1180,9 @@
     {
       "cod_ibge": 1716109,
       "nome": "Paraíso do Tocantins",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 52360,
       "pib_percapita": 66861.0,
       "centroide": [
@@ -1008,7 +1193,9 @@
     {
       "cod_ibge": 1716208,
       "nome": "Paranã",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 10542,
       "pib_percapita": 57932.0,
       "centroide": [
@@ -1019,7 +1206,9 @@
     {
       "cod_ibge": 1716307,
       "nome": "Pau D'Arco",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 4043,
       "pib_percapita": 36196.0,
       "centroide": [
@@ -1030,7 +1219,9 @@
     {
       "cod_ibge": 1716505,
       "nome": "Pedro Afonso",
-      "regiao": "central",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 14055,
       "pib_percapita": 420746.0,
       "centroide": [
@@ -1042,6 +1233,8 @@
       "cod_ibge": 1716604,
       "nome": "Peixe",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 9317,
       "pib_percapita": 295280.0,
       "centroide": [
@@ -1052,7 +1245,9 @@
     {
       "cod_ibge": 1716653,
       "nome": "Pequizeiro",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 4921,
       "pib_percapita": 41252.0,
       "centroide": [
@@ -1063,7 +1258,9 @@
     {
       "cod_ibge": 1716703,
       "nome": "Colméia",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 8941,
       "pib_percapita": 41567.0,
       "centroide": [
@@ -1074,7 +1271,9 @@
     {
       "cod_ibge": 1717008,
       "nome": "Pindorama do Tocantins",
-      "regiao": "sudeste",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 4478,
       "pib_percapita": 33421.0,
       "centroide": [
@@ -1086,6 +1285,8 @@
       "cod_ibge": 1717206,
       "nome": "Piraquê",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 2282,
       "pib_percapita": 54669.0,
       "centroide": [
@@ -1096,7 +1297,9 @@
     {
       "cod_ibge": 1717503,
       "nome": "Pium",
-      "regiao": "oeste",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 7128,
       "pib_percapita": 253143.0,
       "centroide": [
@@ -1108,6 +1311,8 @@
       "cod_ibge": 1717800,
       "nome": "Ponte Alta do Bom Jesus",
       "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 4220,
       "pib_percapita": 16379.0,
       "centroide": [
@@ -1118,7 +1323,9 @@
     {
       "cod_ibge": 1717909,
       "nome": "Ponte Alta do Tocantins",
-      "regiao": "sudeste",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 7586,
       "pib_percapita": 30046.0,
       "centroide": [
@@ -1130,6 +1337,8 @@
       "cod_ibge": 1718006,
       "nome": "Porto Alegre do Tocantins",
       "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 2866,
       "pib_percapita": 11067.0,
       "centroide": [
@@ -1141,6 +1350,8 @@
       "cod_ibge": 1718204,
       "nome": "Porto Nacional",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 64418,
       "pib_percapita": 504037.0,
       "centroide": [
@@ -1152,6 +1363,8 @@
       "cod_ibge": 1718303,
       "nome": "Praia Norte",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 9044,
       "pib_percapita": 13436.0,
       "centroide": [
@@ -1162,7 +1375,9 @@
     {
       "cod_ibge": 1718402,
       "nome": "Presidente Kennedy",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 3047,
       "pib_percapita": 18096.0,
       "centroide": [
@@ -1173,7 +1388,9 @@
     {
       "cod_ibge": 1718451,
       "nome": "Pugmil",
-      "regiao": "central",
+      "regiao": "vale-do-araguaia",
+      "macrorregional": "centro",
+      "polo_regional": "Paraíso do Tocantins",
       "populacao_2022": 2193,
       "pib_percapita": 25069.0,
       "centroide": [
@@ -1184,7 +1401,9 @@
     {
       "cod_ibge": 1718501,
       "nome": "Recursolândia",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 3421,
       "pib_percapita": 45604.0,
       "centroide": [
@@ -1196,6 +1415,8 @@
       "cod_ibge": 1718550,
       "nome": "Riachinho",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 3960,
       "pib_percapita": 19681.0,
       "centroide": [
@@ -1207,6 +1428,8 @@
       "cod_ibge": 1718659,
       "nome": "Rio da Conceição",
       "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 1768,
       "pib_percapita": 1582.0,
       "centroide": [
@@ -1218,6 +1441,8 @@
       "cod_ibge": 1718709,
       "nome": "Rio dos Bois",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 2738,
       "pib_percapita": 49060.0,
       "centroide": [
@@ -1228,7 +1453,9 @@
     {
       "cod_ibge": 1718758,
       "nome": "Rio Sono",
-      "regiao": "central",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 4841,
       "pib_percapita": 44816.0,
       "centroide": [
@@ -1240,6 +1467,8 @@
       "cod_ibge": 1718808,
       "nome": "Sampaio",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 4215,
       "pib_percapita": 89575.0,
       "centroide": [
@@ -1250,7 +1479,9 @@
     {
       "cod_ibge": 1718840,
       "nome": "Sandolândia",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 3723,
       "pib_percapita": 69974.0,
       "centroide": [
@@ -1262,6 +1493,8 @@
       "cod_ibge": 1718865,
       "nome": "Santa Fé do Araguaia",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 7216,
       "pib_percapita": 78913.0,
       "centroide": [
@@ -1272,7 +1505,9 @@
     {
       "cod_ibge": 1718881,
       "nome": "Santa Maria do Tocantins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 2680,
       "pib_percapita": 94479.0,
       "centroide": [
@@ -1283,7 +1518,9 @@
     {
       "cod_ibge": 1718899,
       "nome": "Santa Rita do Tocantins",
-      "regiao": "oeste",
+      "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 2219,
       "pib_percapita": 114174.0,
       "centroide": [
@@ -1294,7 +1531,9 @@
     {
       "cod_ibge": 1718907,
       "nome": "Santa Rosa do Tocantins",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 4653,
       "pib_percapita": 177193.0,
       "centroide": [
@@ -1305,7 +1544,9 @@
     {
       "cod_ibge": 1719004,
       "nome": "Santa Tereza do Tocantins",
-      "regiao": "central",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 2781,
       "pib_percapita": 12489.0,
       "centroide": [
@@ -1317,6 +1558,8 @@
       "cod_ibge": 1720002,
       "nome": "Santa Terezinha do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 2406,
       "pib_percapita": 13774.0,
       "centroide": [
@@ -1328,6 +1571,8 @@
       "cod_ibge": 1720101,
       "nome": "São Bento do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 5654,
       "pib_percapita": 16584.0,
       "centroide": [
@@ -1338,7 +1583,9 @@
     {
       "cod_ibge": 1720150,
       "nome": "São Félix do Tocantins",
-      "regiao": "sudeste",
+      "regiao": "jalapao",
+      "macrorregional": "centro",
+      "polo_regional": "Ponte Alta do Tocantins",
       "populacao_2022": 1783,
       "pib_percapita": 11872.0,
       "centroide": [
@@ -1350,6 +1597,8 @@
       "cod_ibge": 1720200,
       "nome": "São Miguel do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 13241,
       "pib_percapita": 127108.0,
       "centroide": [
@@ -1361,6 +1610,8 @@
       "cod_ibge": 1720259,
       "nome": "São Salvador do Tocantins",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 2385,
       "pib_percapita": 13227.0,
       "centroide": [
@@ -1372,6 +1623,8 @@
       "cod_ibge": 1720309,
       "nome": "São Sebastião do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 4100,
       "pib_percapita": 12540.0,
       "centroide": [
@@ -1382,7 +1635,9 @@
     {
       "cod_ibge": 1720499,
       "nome": "São Valério",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 4422,
       "pib_percapita": 87585.0,
       "centroide": [
@@ -1393,7 +1648,9 @@
     {
       "cod_ibge": 1720655,
       "nome": "Silvanópolis",
-      "regiao": "sul",
+      "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 5108,
       "pib_percapita": 116883.0,
       "centroide": [
@@ -1405,6 +1662,8 @@
       "cod_ibge": 1720804,
       "nome": "Sítio Novo do Tocantins",
       "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 10830,
       "pib_percapita": 28314.0,
       "centroide": [
@@ -1416,6 +1675,8 @@
       "cod_ibge": 1720853,
       "nome": "Sucupira",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 1577,
       "pib_percapita": 494498.0,
       "centroide": [
@@ -1427,6 +1688,8 @@
       "cod_ibge": 1720903,
       "nome": "Taguatinga",
       "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 14011,
       "pib_percapita": 81241.0,
       "centroide": [
@@ -1437,7 +1700,9 @@
     {
       "cod_ibge": 1720937,
       "nome": "Taipas do Tocantins",
-      "regiao": "sul",
+      "regiao": "sudeste",
+      "macrorregional": "sul",
+      "polo_regional": "Dianópolis",
       "populacao_2022": 2021,
       "pib_percapita": 9909.0,
       "centroide": [
@@ -1449,6 +1714,8 @@
       "cod_ibge": 1720978,
       "nome": "Talismã",
       "regiao": "sul",
+      "macrorregional": "sul",
+      "polo_regional": "Gurupi",
       "populacao_2022": 2456,
       "pib_percapita": 93130.0,
       "centroide": [
@@ -1460,6 +1727,8 @@
       "cod_ibge": 1721000,
       "nome": "Palmas",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 302692,
       "pib_percapita": 262385.0,
       "centroide": [
@@ -1471,6 +1740,8 @@
       "cod_ibge": 1721109,
       "nome": "Tocantínia",
       "regiao": "central",
+      "macrorregional": "centro",
+      "polo_regional": "Palmas",
       "populacao_2022": 7459,
       "pib_percapita": 104743.0,
       "centroide": [
@@ -1481,7 +1752,9 @@
     {
       "cod_ibge": 1721208,
       "nome": "Tocantinópolis",
-      "regiao": "norte",
+      "regiao": "bico-do-papagaio",
+      "macrorregional": "norte",
+      "polo_regional": "Augustinópolis/Tocantinópolis",
       "populacao_2022": 22615,
       "pib_percapita": 21117.0,
       "centroide": [
@@ -1492,7 +1765,9 @@
     {
       "cod_ibge": 1721257,
       "nome": "Tupirama",
-      "regiao": "central",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 1909,
       "pib_percapita": 62585.0,
       "centroide": [
@@ -1503,7 +1778,9 @@
     {
       "cod_ibge": 1721307,
       "nome": "Tupiratins",
-      "regiao": "norte",
+      "regiao": "meio-norte",
+      "macrorregional": "norte",
+      "polo_regional": "Colinas do Tocantins/Guaraí",
       "populacao_2022": 1874,
       "pib_percapita": 8507.0,
       "centroide": [
@@ -1515,6 +1792,8 @@
       "cod_ibge": 1722081,
       "nome": "Wanderlândia",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 10522,
       "pib_percapita": 45034.0,
       "centroide": [
@@ -1526,6 +1805,8 @@
       "cod_ibge": 1722107,
       "nome": "Xambioá",
       "regiao": "norte",
+      "macrorregional": "norte",
+      "polo_regional": "Araguaína",
       "populacao_2022": 10517,
       "pib_percapita": 39626.0,
       "centroide": [
