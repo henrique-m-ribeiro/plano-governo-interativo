@@ -7,8 +7,8 @@ para o Tocantins de forma interativa, conectando propostas a dados reais do terr
 do estado, apresentando o plano de governo com base em evidências e escuta cidadã.
 
 ## Ecossistema
-- **Repo acadêmico central:** [doutorado](https://github.com/henrique-m-ribeiro/doutorado)
-- **Dados territoriais:** [tocantins-integrado](https://github.com/henrique-m-ribeiro/tocantins-integrado) — fonte dos indicadores e fichas municipais
+- **Repo acadêmico central:** [doutorado](https://github.com/henrique-m-ribeiro/doutorado) — CSVs originais do pipeline como artefato de pesquisa
+- **Dashboard territorial:** [tocantins-integrado](https://github.com/henrique-m-ribeiro/tocantins-integrado) — sistema técnico complementar
 - **Cadernos municipais:** [caderno-tocantins-2026](https://github.com/henrique-m-ribeiro/caderno-tocantins-2026) — conteúdo dos 9 volumes
 - **Framework metodológico:** [ia-collab-os](https://github.com/henrique-m-ribeiro/ia-collab-os) — colaboração H-IA v2.2
 
@@ -22,7 +22,7 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 - **Estilização:** Tailwind CSS 4
 - **Mapas:** Leaflet + react-leaflet (planejado — atualmente placeholder, GeoJSON pendente de integração)
 - **Ícones:** lucide-react
-- **Dados:** JSONs importados do tocantins-integrado (não duplicar banco)
+- **Dados:** CSVs do pipeline em `data/pipeline/` (copiados do doutorado), JSONs consolidados em `src/data/indicadores/` (ADR-013). Este repo é a fonte canônica de dados para o app.
 - **IA/LLM:** Integração com API de LLM para assistente conversacional e processamento de contribuições
 - **Deploy:** Replit (MVP atual em https://plano-governo-interativo.replit.app)
 - **Acessibilidade:** WCAG 2.1 AA obrigatório
