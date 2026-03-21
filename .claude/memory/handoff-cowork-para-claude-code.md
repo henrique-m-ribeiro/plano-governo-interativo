@@ -51,8 +51,17 @@ Se o arquivo existir, use-o como referência auxiliar (lista de CSVs por eixo, e
 ### Informações sobre os CSVs
 
 - **Encoding:** UTF-8 BOM (utf-8-sig) — padrão dos CSVs do pipeline
-- **Separador:** vírgula (,) para basedosdados; vírgula ou ponto-e-vírgula para geoportal-seplan
+- **Separador:** vírgula (,) para ambas as camadas (confirmado pela Etapa I-1 — nenhum ponto-e-vírgula encontrado)
 - **Coluna de município:** `cod_ibge` (7 dígitos, todos começam com 17)
+  - **Exceção:** 3 CSVs do geoportal usam `cod_ibge_1` em vez de `cod_ibge` (achado da Etapa I-1)
+  - CSVs de mineração (CFEM): usam `nome_ente` / `codigo_ente` — não são fonte primária para I-2
+
+### Achados da Etapa I-1 (relevantes para I-2)
+
+A Etapa I-1 (inventário) já foi concluída no repo `doutorado`. Principais achados:
+- **91 CSVs municipais** (não 89 como estimado), 6 estaduais, 1 metadados
+- **86 CSVs** com exatamente 139 municípios únicos
+- O inventário completo está em `../doutorado/06-dados/inventario-csvs-pipeline.json` — use como referência
 
 ---
 
