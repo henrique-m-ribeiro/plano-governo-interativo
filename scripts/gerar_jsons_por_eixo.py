@@ -508,14 +508,176 @@ def gerar_eixo_03():
 def gerar_eixo_04():
     """Eixo 4 — Infraestrutura e Conectividade"""
     print("\n=== Eixo 04: Infraestrutura ===")
-    # Implementado na Fase B
-    raise NotImplementedError("Fase B")
+
+    csv_anatel = os.path.join(BD_CSV, "infraestrutura", "anatel_banda_larga_bd.csv")
+    csv_snis = os.path.join(BD_CSV, "infraestrutura", "snis_agua_esgoto_bd.csv")
+
+    # Banda larga: usar apenas dezembro (mes=12) para densidade anual
+    densidade_bl = processar_csv_longo(
+        csv_anatel, "acessos_densidade",
+        filtro=lambda r: r.get("mes", "").strip() == "12"
+    )
+
+    # SNIS: 3 indicadores
+    agua = processar_csv_longo(csv_snis, "indice_atendimento_agua")
+    esgoto = processar_csv_longo(csv_snis, "indice_atendimento_esgoto")
+    trat_esgoto = processar_csv_longo(csv_snis, "indice_tratamento_esgoto")
+
+    indicadores = [
+        construir_indicador(
+            "densidade_banda_larga",
+            "Densidade de banda larga fixa",
+            "acessos/100 hab",
+            "Anatel",
+            "Acessos de banda larga fixa por 100 habitantes (dezembro de cada ano)",
+            densidade_bl
+        ),
+        construir_indicador(
+            "indice_atendimento_agua",
+            "Índice de atendimento de água",
+            "%",
+            "SNIS/MDR",
+            "Percentual da população atendida com abastecimento de água",
+            agua
+        ),
+        construir_indicador(
+            "indice_atendimento_esgoto",
+            "Índice de atendimento de esgoto",
+            "%",
+            "SNIS/MDR",
+            "Percentual da população atendida com coleta de esgoto",
+            esgoto
+        ),
+        construir_indicador(
+            "indice_tratamento_esgoto",
+            "Índice de tratamento de esgoto",
+            "%",
+            "SNIS/MDR",
+            "Percentual do esgoto coletado que é tratado",
+            trat_esgoto
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/infraestrutura/anatel_banda_larga_bd.csv",
+        "basedosdados/csv/infraestrutura/snis_agua_esgoto_bd.csv",
+    ]
+
+    return construir_json_eixo(4, indicadores, fontes)
 
 def gerar_eixo_05():
     """Eixo 5 — Meio Ambiente e Sustentabilidade"""
     print("\n=== Eixo 05: Meio Ambiente ===")
-    # Implementado na Fase B
-    raise NotImplementedError("Fase B")
+
+    csv_prodes = os.path.join(BD_CSV, "meio_ambiente", "prodes_desmatamento_bd.csv")
+    csv_mapbiomas = os.path.join(BD_CSV, "meio_ambiente", "mapbiomas_cobertura_solo_bd.csv")
+
+    # PRODES: desmatado e vegetação natural (km²)
+    desmatado = processar_csv_longo(csv_prodes, "desmatado")
+    veg_natural = processar_csv_longo(csv_prodes, "vegetacao_natural")
+
+    # MapBiomas: cobertura florestal (classes de formação florestal)
+    # Classes florestais no MapBiomas: id_classe 3 (Formação Florestal),
+    # 4 (Formação Savânica), 5 (Mangue), 49 (Restinga Arborizada)
+    # Para Cerrado/TO, as principais são 3 e 4
+    rows_mapbiomas = ler_csv(csv_mapbiomas)
+    cobertura_florestal = defaultdict(dict)
+    area_total_por_mun_ano = defaultdict(lambda: defaultdict(float))
+
+    for row in rows_mapbiomas:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        try:
+            area = float(row.get("area", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+        id_classe = row.get("id_classe", "").strip()
+        area_total_por_mun_ano[cod][ano] += area
+        # Classes florestais/savânicas: 3, 4, 5, 49, 11, 12
+        # Simplificar: usar vegetação natural = tudo menos pastagem (15),
+        # agricultura (18, 19, 20, 21, 39, 40, 41, 46, 47, 48),
+        # e área não vegetada (22, 23, 24, 25, 29, 30, 31)
+        # Mais simples: classes naturais = 3, 4, 5, 11, 12, 13, 49, 50
+        if id_classe in ("3", "4", "5", "11", "12", "13", "49", "50"):
+            if ano in cobertura_florestal.get(cod, {}):
+                cobertura_florestal[cod][ano] += area
+            else:
+                cobertura_florestal[cod][ano] = area
+
+    # Calcular percentual de cobertura florestal
+    cobertura_pct = {}
+    for cod in cobertura_florestal:
+        cobertura_pct[cod] = {}
+        for ano in cobertura_florestal[cod]:
+            total = area_total_por_mun_ano[cod].get(ano, 0)
+            if total > 0:
+                pct = (cobertura_florestal[cod][ano] / total) * 100
+                cobertura_pct[cod][ano] = round(pct, 2)
+
+    # Arredondar áreas florestais
+    for cod in cobertura_florestal:
+        for ano in cobertura_florestal[cod]:
+            cobertura_florestal[cod][ano] = round(cobertura_florestal[cod][ano], 2)
+
+    # Taxa de desmatamento anual (diferença entre anos consecutivos)
+    taxa_desmat = {}
+    for cod, anos in desmatado.items():
+        anos_sorted = sorted(anos.keys())
+        taxa_desmat[cod] = {}
+        for i in range(1, len(anos_sorted)):
+            ano_ant = anos_sorted[i - 1]
+            ano_cur = anos_sorted[i]
+            diff = anos[ano_cur] - anos[ano_ant]
+            if diff >= 0:
+                taxa_desmat[cod][ano_cur] = round(diff, 2)
+    # Remover municípios sem dados
+    taxa_desmat = {k: v for k, v in taxa_desmat.items() if v}
+
+    indicadores = [
+        construir_indicador(
+            "area_desmatada_km2",
+            "Área desmatada acumulada",
+            "km²",
+            "INPE/PRODES",
+            "Área total desmatada acumulada no município (km²)",
+            desmatado
+        ),
+        construir_indicador(
+            "vegetacao_natural_km2",
+            "Vegetação natural remanescente",
+            "km²",
+            "INPE/PRODES",
+            "Área de vegetação natural remanescente no município (km²)",
+            veg_natural
+        ),
+        construir_indicador(
+            "cobertura_natural_pct",
+            "Cobertura natural",
+            "%",
+            "MapBiomas",
+            "Percentual do território com cobertura vegetal natural (formações florestais, savânicas e campestres)",
+            cobertura_pct
+        ),
+        construir_indicador(
+            "taxa_desmatamento_anual",
+            "Taxa de desmatamento anual",
+            "km²/ano",
+            "INPE/PRODES",
+            "Incremento anual de área desmatada (km²)",
+            taxa_desmat
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/meio_ambiente/prodes_desmatamento_bd.csv",
+        "basedosdados/csv/meio_ambiente/mapbiomas_cobertura_solo_bd.csv",
+    ]
+
+    return construir_json_eixo(5, indicadores, fontes)
 
 def gerar_eixo_06():
     """Eixo 6 — Segurança Pública e Cidadania"""
@@ -526,8 +688,151 @@ def gerar_eixo_06():
 def gerar_eixo_07():
     """Eixo 7 — Gestão Pública e Inovação"""
     print("\n=== Eixo 07: Gestão Pública ===")
-    # Implementado na Fase B
-    raise NotImplementedError("Fase B")
+
+    csv_capacidade = os.path.join(BD_CSV, "gestao_publica", "munic_capacidade_bd.csv")
+    csv_vinculos = os.path.join(BD_CSV, "gestao_publica", "munic_vinculos_bd.csv")
+    csv_receitas = os.path.join(BD_CSV, "gestao_publica", "siconfi_receitas_bd.csv")
+
+    # --- Capacidade de gestão ---
+    # Contar temas com "Secretaria exclusiva" por município/ano
+    rows_cap = ler_csv(csv_capacidade)
+    capacidade = defaultdict(dict)
+    for row in rows_cap:
+        cod_raw = row.get("id_municipio", "").strip()
+        cod = resolver_cod_ibge(row, "id_municipio")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        orgao = row.get("caracterizacao_orgao_gestor", "").strip()
+        # Contar se tem secretaria (exclusiva ou conjunta)
+        tem_secretaria = 1 if "ecretaria" in orgao else 0
+        if ano not in capacidade[cod]:
+            capacidade[cod][ano] = 0
+        capacidade[cod][ano] += tem_secretaria
+
+    capacidade = {k: {a: round(v, 2) for a, v in anos.items()}
+                  for k, anos in capacidade.items()}
+
+    # --- Vínculos ---
+    rows_vinc = ler_csv(csv_vinculos)
+    estatutarios = defaultdict(dict)
+    total_vinculos = defaultdict(dict)
+    for row in rows_vinc:
+        cod = resolver_cod_ibge(row, "id_municipio")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        escolaridade = row.get("escolaridade", "").strip()
+        if escolaridade != "Total":
+            continue
+        tipo = row.get("tipo_vinculo", "").strip()
+        try:
+            qtd = float(row.get("quantidade_vinculo", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+
+        if ano not in total_vinculos[cod]:
+            total_vinculos[cod][ano] = 0.0
+        total_vinculos[cod][ano] += qtd
+
+        if tipo == "Estatutários":
+            estatutarios[cod][ano] = round(qtd, 2)
+
+    total_vinculos = {k: {a: round(v, 2) for a, v in anos.items()}
+                      for k, anos in total_vinculos.items()}
+
+    # --- Receitas (SICONFI) ---
+    rows_rec = ler_csv(csv_receitas)
+    receita_total = defaultdict(dict)
+    receita_propria = defaultdict(dict)
+    receita_transf = defaultdict(dict)
+
+    for row in rows_rec:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        conta = row.get("conta", "").strip()
+        estagio = row.get("estagio", "").strip()
+        if "Brutas Realizadas" not in estagio:
+            continue
+        try:
+            valor = float(row.get("valor", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+
+        # Classificar receitas pelos nomes exatos do SICONFI
+        if conta == "TOTAL DAS RECEITAS (III) = (I + II)":
+            receita_total[cod][ano] = round(valor, 2)
+        elif conta == "Transferências Correntes":
+            receita_transf[cod][ano] = round(valor, 2)
+        elif conta == "Impostos, Taxas e Contribuições de Melhoria":
+            receita_propria[cod][ano] = round(valor, 2)
+
+    indicadores = [
+        construir_indicador(
+            "receita_total",
+            "Receita total",
+            "R$",
+            "STN/SICONFI",
+            "Receita total bruta realizada pelo município (R$)",
+            dict(receita_total)
+        ),
+        construir_indicador(
+            "receita_tributaria",
+            "Receita tributária própria",
+            "R$",
+            "STN/SICONFI",
+            "Receita tributária arrecadada pelo município (R$)",
+            dict(receita_propria)
+        ),
+        construir_indicador(
+            "receita_transferencias",
+            "Receitas de transferências correntes",
+            "R$",
+            "STN/SICONFI",
+            "Receitas recebidas de transferências correntes (R$)",
+            dict(receita_transf)
+        ),
+        construir_indicador(
+            "servidores_estatutarios",
+            "Servidores estatutários",
+            "und",
+            "IBGE/MUNIC",
+            "Quantidade de servidores com vínculo estatutário na administração direta",
+            dict(estatutarios)
+        ),
+        construir_indicador(
+            "servidores_total",
+            "Total de vínculos",
+            "und",
+            "IBGE/MUNIC",
+            "Total de vínculos na administração municipal direta (todos os tipos)",
+            dict(total_vinculos)
+        ),
+        construir_indicador(
+            "capacidade_gestao",
+            "Capacidade de gestão",
+            "und",
+            "IBGE/MUNIC",
+            "Número de temas com órgão gestor estruturado (secretaria exclusiva ou conjunta)",
+            dict(capacidade)
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/gestao_publica/munic_capacidade_bd.csv",
+        "basedosdados/csv/gestao_publica/munic_vinculos_bd.csv",
+        "basedosdados/csv/gestao_publica/siconfi_receitas_bd.csv",
+    ]
+
+    return construir_json_eixo(7, indicadores, fontes)
 
 def gerar_eixo_08():
     """Eixo 8 — Agropecuária e Desenvolvimento Rural"""
@@ -538,8 +843,173 @@ def gerar_eixo_08():
 def gerar_eixo_09():
     """Eixo 9 — Economia e Emprego"""
     print("\n=== Eixo 09: Economia ===")
-    # Implementado na Fase B
-    raise NotImplementedError("Fase B")
+
+    csv_pib = os.path.join(BD_CSV, "economia", "pib_municipal_setorial_bd.csv")
+    csv_rais = os.path.join(BD_CSV, "emprego", "rais_emprego_setor_bd.csv")
+    csv_cfem_arr = os.path.join(BD_CSV, "mineracao", "cfem_arrecadacao_to.csv")
+    csv_cfem_dist = os.path.join(BD_CSV, "mineracao", "cfem_distribuicao_to.csv")
+    csv_pib_geo = os.path.join(GEO_CSV, "economia", "pib_e_pib_por_capita.csv")
+
+    # --- PIB setorial (basedosdados, formato longo) ---
+    pib_total = processar_csv_longo(csv_pib, "pib")
+    va_agro = processar_csv_longo(csv_pib, "va_agropecuaria")
+    va_industria = processar_csv_longo(csv_pib, "va_industria")
+    va_servicos = processar_csv_longo(csv_pib, "va_servicos")
+
+    # --- PIB Geoportal (formato largo) — complementar série ---
+    rows_geo = ler_csv(csv_pib_geo)
+    pib_geo = defaultdict(dict)
+    for row in rows_geo:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col, val_str in row.items():
+            col_clean = col.strip()
+            # Colunas pib10_1000 ... pib16_1000
+            m = re.match(r"pib(\d{2})_1000", col_clean)
+            if m:
+                ano_suffix = int(m.group(1))
+                ano = str(2000 + ano_suffix)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("", "-"):
+                    try:
+                        # Valor em R$ 1000 → converter para R$
+                        valor = float(val_str) * 1000
+                        pib_geo[cod][ano] = round(valor, 2)
+                    except ValueError:
+                        pass
+
+    # Merge PIB: basedosdados tem prioridade
+    pib_merged = merge_series(dict(pib_geo), pib_total)
+
+    # --- RAIS emprego (formato longo, agrupar por município/ano) ---
+    rows_rais = ler_csv(csv_rais)
+    emprego = defaultdict(dict)
+    for row in rows_rais:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        try:
+            vinculos = float(row.get("vinculos", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+        if ano not in emprego[cod]:
+            emprego[cod][ano] = 0
+        emprego[cod][ano] += vinculos
+
+    emprego = {k: {a: round(v, 2) for a, v in anos.items()}
+               for k, anos in emprego.items()}
+
+    # --- CFEM arrecadação (agrupar por município/ano) ---
+    rows_cfem = ler_csv(csv_cfem_arr)
+    cfem = defaultdict(dict)
+    for row in rows_cfem:
+        cod = resolver_cod_ibge(row, "codigo_municipio")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        try:
+            valor = float(row.get("valor_recolhido", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+        if ano not in cfem[cod]:
+            cfem[cod][ano] = 0
+        cfem[cod][ano] += valor
+
+    cfem = {k: {a: round(v, 2) for a, v in anos.items()}
+            for k, anos in cfem.items()}
+
+    # --- CFEM distribuição (complementar com dados mais antigos) ---
+    rows_cfem_d = ler_csv(csv_cfem_dist)
+    cfem_dist = defaultdict(dict)
+    for row in rows_cfem_d:
+        ente_tipo = row.get("ente", "").strip()
+        if ente_tipo != "Município":
+            continue
+        cod = resolver_cod_ibge(row, "codigo_ente")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        try:
+            valor = float(row.get("valor", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+        if ano not in cfem_dist[cod]:
+            cfem_dist[cod][ano] = 0
+        cfem_dist[cod][ano] += valor
+
+    cfem_dist = {k: {a: round(v, 2) for a, v in anos.items()}
+                 for k, anos in cfem_dist.items()}
+
+    cfem_merged = merge_series(dict(cfem_dist), dict(cfem))
+
+    indicadores = [
+        construir_indicador(
+            "pib_total",
+            "PIB municipal",
+            "R$",
+            "IBGE",
+            "Produto Interno Bruto do município (R$)",
+            pib_merged
+        ),
+        construir_indicador(
+            "va_agropecuaria",
+            "Valor adicionado — Agropecuária",
+            "R$",
+            "IBGE",
+            "Valor adicionado bruto do setor agropecuário (R$)",
+            va_agro
+        ),
+        construir_indicador(
+            "va_industria",
+            "Valor adicionado — Indústria",
+            "R$",
+            "IBGE",
+            "Valor adicionado bruto do setor industrial (R$)",
+            va_industria
+        ),
+        construir_indicador(
+            "va_servicos",
+            "Valor adicionado — Serviços",
+            "R$",
+            "IBGE",
+            "Valor adicionado bruto do setor de serviços (R$)",
+            va_servicos
+        ),
+        construir_indicador(
+            "emprego_formal_total",
+            "Emprego formal total",
+            "und",
+            "MTE/RAIS",
+            "Total de vínculos empregatícios formais ativos (todos os setores CNAE)",
+            dict(emprego)
+        ),
+        construir_indicador(
+            "cfem_arrecadacao",
+            "Arrecadação CFEM",
+            "R$",
+            "ANM/CFEM",
+            "Arrecadação da Compensação Financeira pela Exploração de Recursos Minerais (R$)",
+            cfem_merged
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/economia/pib_municipal_setorial_bd.csv",
+        "basedosdados/csv/emprego/rais_emprego_setor_bd.csv",
+        "basedosdados/csv/mineracao/cfem_arrecadacao_to.csv",
+        "basedosdados/csv/mineracao/cfem_distribuicao_to.csv",
+        "geoportal-seplan/csv/economia/pib_e_pib_por_capita.csv",
+    ]
+
+    return construir_json_eixo(9, indicadores, fontes)
 
 def gerar_eixo_10():
     """Eixo 10 — Cultura, Esporte e Juventude"""
