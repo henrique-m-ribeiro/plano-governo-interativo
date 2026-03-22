@@ -647,11 +647,338 @@ def gerar_eixo_01():
 
     return construir_json_eixo(1, indicadores, fontes)
 
+def _somar_colunas_numericas(row, excluir=None):
+    """Soma todas as colunas numéricas de uma linha, excluindo as especificadas."""
+    if excluir is None:
+        excluir = {"cod_ibge", "cod_ibge_1", "cod_ibge_1_1", "nome", "nome_1",
+                   "color", "shape_area", "shape_leng", "last_modification",
+                   "last_modification_1", "modified_by", "modified_by_1",
+                   "number", "abe"}
+    total = 0
+    for col, val_str in row.items():
+        if col.strip().lower() in excluir:
+            continue
+        val_str = val_str.strip().replace(",", ".")
+        if val_str and val_str not in ("-", "", "0"):
+            try:
+                total += float(val_str)
+            except ValueError:
+                pass
+    return total
+
+
+def _media_colunas_taxa(row, prefixo_ef, prefixo_em=None, excluir=None):
+    """Calcula média das taxas (ensino fundamental e médio) para uma linha."""
+    if excluir is None:
+        excluir = {"cod_ibge", "cod_ibge_1", "cod_ibge_1_1", "nome", "nome_1",
+                   "color", "shape_area", "shape_leng", "abe"}
+    vals = []
+    for col, val_str in row.items():
+        col_clean = col.strip().lower()
+        if col_clean in excluir:
+            continue
+        if not col_clean.startswith(prefixo_ef):
+            if prefixo_em and not col_clean.startswith(prefixo_em):
+                continue
+        val_str = val_str.strip().replace(",", ".")
+        if val_str and val_str not in ("-", ""):
+            try:
+                v = float(val_str)
+                if v > 0:
+                    vals.append(v)
+            except ValueError:
+                pass
+    return round(sum(vals) / len(vals), 2) if vals else None
+
+
+def _processar_geoportal_total(caminho, ano):
+    """Processa CSV do Geoportal somando colunas numéricas. Retorna {cod: {ano: total}}."""
+    rows = ler_csv(caminho)
+    result = {}
+    for row in rows:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_cod_ibge(row, "cod_ibge_1")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        total = _somar_colunas_numericas(row)
+        if total > 0:
+            result[cod] = {ano: round(total, 2)}
+    return result
+
+
+def _processar_geoportal_taxa(caminho, ano, prefixo_ef, prefixo_em=None):
+    """Processa CSV de taxa do Geoportal. Retorna {cod: {ano: media}}."""
+    rows = ler_csv(caminho)
+    result = {}
+    for row in rows:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_cod_ibge(row, "cod_ibge_1")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        media = _media_colunas_taxa(row, prefixo_ef, prefixo_em)
+        if media is not None:
+            result[cod] = {ano: media}
+    return result
+
+
 def gerar_eixo_02():
     """Eixo 2 — Educação e Capital Humano"""
     print("\n=== Eixo 02: Educação ===")
-    # Implementado na Fase D
-    raise NotImplementedError("Fase D")
+
+    csv_ideb = os.path.join(BD_CSV, "educacao", "ideb_municipio_bd.csv")
+    csv_matriculas_bd = os.path.join(BD_CSV, "educacao", "censo_escolar_matriculas_bd.csv")
+
+    # --- IDEB (basedosdados, formato longo) ---
+    # Anos iniciais (ensino fundamental)
+    ideb_ai = processar_csv_longo(
+        csv_ideb, "ideb",
+        filtro=lambda r: "anos_iniciais" in r.get("ensino", "").lower()
+                         or "fundamental" in r.get("ensino", "").lower()
+    )
+
+    # IDEB dos Geoportal (2009, 2011, 2013, 2015) — usar ideb_ai_p (público)
+    for arquivo, ano in [
+        ("inidce_2009.csv", "2009"), ("inidce_2011.csv", "2011"),
+        ("indice_2013.csv", "2013"), ("indice_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if not os.path.exists(caminho):
+            continue
+        rows = ler_csv(caminho)
+        for row in rows:
+            cod = resolver_cod_ibge(row, "cod_ibge")
+            if not cod or cod not in TODOS_CODIGOS:
+                continue
+            # ideb_ai_p = anos iniciais público (melhor proxy geral)
+            val = row.get("ideb_ai_p", "").strip().replace(",", ".")
+            if val and val not in ("-", "0", ""):
+                try:
+                    v = float(val)
+                    if v > 0:
+                        if cod not in ideb_ai:
+                            ideb_ai[cod] = {}
+                        if ano not in ideb_ai[cod]:
+                            ideb_ai[cod][ano] = round(v, 2)
+                except ValueError:
+                    pass
+
+    # Taxa de aprovação do IDEB
+    taxa_aprov_ideb = processar_csv_longo(
+        csv_ideb, "taxa_aprovacao",
+        filtro=lambda r: "fundamental" in r.get("ensino", "").lower()
+    )
+
+    # --- Matrículas (basedosdados + Geoportal) ---
+    # BD: somar por município/ano
+    rows_mat = ler_csv(csv_matriculas_bd)
+    matriculas_bd = defaultdict(dict)
+    for row in rows_mat:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        val = row.get("matriculas", "").strip().replace(",", ".")
+        if ano and val:
+            try:
+                if ano not in matriculas_bd[cod]:
+                    matriculas_bd[cod][ano] = 0
+                matriculas_bd[cod][ano] += float(val)
+            except ValueError:
+                pass
+    matriculas_bd = {k: {a: round(v, 2) for a, v in anos.items()}
+                     for k, anos in matriculas_bd.items()}
+
+    # Geoportal matrículas (2012, 2014, 2015)
+    mat_geo = {}
+    for arquivo, ano in [
+        ("matriculas_2012.csv", "2012"),
+        ("matriculas_2014.csv", "2014"),
+        ("matriculas_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            mat_geo = merge_series(mat_geo, _processar_geoportal_total(caminho, ano))
+
+    matriculas = merge_series(mat_geo, dict(matriculas_bd))
+
+    # --- Docentes (Geoportal: 2012, 2014, 2015) ---
+    docentes = {}
+    for arquivo, ano in [
+        ("docentes_separados_por_categoria_2012.csv", "2012"),
+        ("docentes_separados_2014.csv", "2014"),
+        ("docentes_separados_por_categoria_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            docentes = merge_series(docentes, _processar_geoportal_total(caminho, ano))
+
+    # --- Estabelecimentos (Geoportal: 2012, 2014, 2015) ---
+    estab = {}
+    for arquivo, ano in [
+        ("estabelecimentos_2012.csv", "2012"),
+        ("estabelecimentos_2014.csv", "2014"),
+        ("estabelecimentos_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            estab = merge_series(estab, _processar_geoportal_total(caminho, ano))
+
+    # --- Taxas (Geoportal) ---
+    # Abandono (ta_ef_ = ensino fundamental, ta_em_ = ensino médio)
+    taxa_abandono = {}
+    for arquivo, ano in [
+        ("taxa_abandono_2013.csv", "2013"),
+        ("taxa_abandono_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            taxa_abandono = merge_series(
+                taxa_abandono,
+                _processar_geoportal_taxa(caminho, ano, "ta_ef_", "ta_em_")
+            )
+
+    # Aprovação
+    taxa_aprovacao = {}
+    for arquivo, ano in [
+        ("taxa_aprovacao_2013.csv", "2013"),
+        ("taxa_de_aprovacao_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            taxa_aprovacao = merge_series(
+                taxa_aprovacao,
+                _processar_geoportal_taxa(caminho, ano, "ta_ef_", "ta_em_")
+            )
+
+    # Distorção idade-série
+    taxa_distorcao = {}
+    for arquivo, ano in [
+        ("taxa_de_distorcao_2013.csv", "2013"),
+        ("taxa_de_distorcao_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            taxa_distorcao = merge_series(
+                taxa_distorcao,
+                _processar_geoportal_taxa(caminho, ano, "ti_s", "ti_s")
+            )
+
+    # Reprovação
+    taxa_reprovacao = {}
+    for arquivo, ano in [
+        ("taxa_de_reprovacao_2013.csv", "2013"),
+        ("taxa_de_reprovacao_2015.csv", "2015"),
+    ]:
+        caminho = os.path.join(GEO_CSV, "educacao", arquivo)
+        if os.path.exists(caminho):
+            taxa_reprovacao = merge_series(
+                taxa_reprovacao,
+                _processar_geoportal_taxa(caminho, ano, "tr_ef", "tr_em")
+            )
+
+    # Merge taxa_aprovacao com dados do IDEB (mais anos)
+    taxa_aprovacao_merged = merge_series(taxa_aprovacao, taxa_aprov_ideb)
+
+    indicadores = [
+        construir_indicador(
+            "ideb_anos_iniciais",
+            "IDEB — Anos iniciais do ensino fundamental",
+            "índice",
+            "INEP/MEC",
+            "Índice de Desenvolvimento da Educação Básica para anos iniciais (1ª a 5ª série)",
+            ideb_ai
+        ),
+        construir_indicador(
+            "taxa_aprovacao",
+            "Taxa de aprovação",
+            "%",
+            "INEP/MEC",
+            "Percentual de alunos aprovados no ensino fundamental",
+            taxa_aprovacao_merged
+        ),
+        construir_indicador(
+            "taxa_abandono",
+            "Taxa de abandono escolar",
+            "%",
+            "INEP/Geoportal SEPLAN",
+            "Percentual médio de abandono escolar (ensino fundamental e médio)",
+            taxa_abandono
+        ),
+        construir_indicador(
+            "taxa_distorcao_idade_serie",
+            "Taxa de distorção idade-série",
+            "%",
+            "INEP/Geoportal SEPLAN",
+            "Percentual médio de distorção idade-série",
+            taxa_distorcao
+        ),
+        construir_indicador(
+            "taxa_reprovacao",
+            "Taxa de reprovação",
+            "%",
+            "INEP/Geoportal SEPLAN",
+            "Percentual médio de reprovação escolar",
+            taxa_reprovacao
+        ),
+        construir_indicador(
+            "matriculas_total",
+            "Total de matrículas",
+            "und",
+            "INEP/Censo Escolar",
+            "Total de matrículas em todas as redes e etapas de ensino",
+            matriculas
+        ),
+        construir_indicador(
+            "docentes_total",
+            "Total de docentes",
+            "und",
+            "INEP/Geoportal SEPLAN",
+            "Total de docentes em exercício em todas as redes e etapas",
+            docentes
+        ),
+        construir_indicador(
+            "estabelecimentos_ensino",
+            "Estabelecimentos de ensino",
+            "und",
+            "INEP/Geoportal SEPLAN",
+            "Total de estabelecimentos de ensino (todas as redes e etapas)",
+            estab
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/educacao/ideb_municipio_bd.csv",
+        "basedosdados/csv/educacao/censo_escolar_matriculas_bd.csv",
+        "geoportal-seplan/csv/educacao/inidce_2009.csv",
+        "geoportal-seplan/csv/educacao/inidce_2011.csv",
+        "geoportal-seplan/csv/educacao/indice_2013.csv",
+        "geoportal-seplan/csv/educacao/indice_2015.csv",
+        "geoportal-seplan/csv/educacao/matriculas_2012.csv",
+        "geoportal-seplan/csv/educacao/matriculas_2014.csv",
+        "geoportal-seplan/csv/educacao/matriculas_2015.csv",
+        "geoportal-seplan/csv/educacao/docentes_separados_2014.csv",
+        "geoportal-seplan/csv/educacao/docentes_separados_por_categoria_2012.csv",
+        "geoportal-seplan/csv/educacao/docentes_separados_por_categoria_2015.csv",
+        "geoportal-seplan/csv/educacao/estabelecimentos_2012.csv",
+        "geoportal-seplan/csv/educacao/estabelecimentos_2014.csv",
+        "geoportal-seplan/csv/educacao/estabelecimentos_2015.csv",
+        "geoportal-seplan/csv/educacao/taxa_abandono_2013.csv",
+        "geoportal-seplan/csv/educacao/taxa_abandono_2015.csv",
+        "geoportal-seplan/csv/educacao/taxa_aprovacao_2013.csv",
+        "geoportal-seplan/csv/educacao/taxa_de_aprovacao_2015.csv",
+        "geoportal-seplan/csv/educacao/taxa_de_distorcao_2013.csv",
+        "geoportal-seplan/csv/educacao/taxa_de_distorcao_2015.csv",
+        "geoportal-seplan/csv/educacao/taxa_de_reprovacao_2013.csv",
+        "geoportal-seplan/csv/educacao/taxa_de_reprovacao_2015.csv",
+    ]
+
+    return construir_json_eixo(2, indicadores, fontes)
 
 def gerar_eixo_03():
     """Eixo 3 — Saúde e Qualidade de Vida"""
