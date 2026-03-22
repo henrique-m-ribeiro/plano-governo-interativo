@@ -1187,7 +1187,7 @@ export const municipios: Municipio[] = [
   },
   {
     "codIbge": 1706001,
-    "nome": "Couto Magalhães",
+    "nome": "Couto de Magalhães",
     "regional": "Meio Norte",
     "regionalSlug": "meio-norte",
     "macrorregional": "norte",
@@ -2643,7 +2643,7 @@ export const municipios: Municipio[] = [
   },
   {
     "codIbge": 1716307,
-    "nome": "Pau D'Arco",
+    "nome": "Pau d'Arco",
     "regional": "Meio Norte",
     "regionalSlug": "meio-norte",
     "macrorregional": "norte",
@@ -3539,7 +3539,7 @@ export const municipios: Municipio[] = [
   },
   {
     "codIbge": 1720499,
-    "nome": "São Valério",
+    "nome": "São Valério da Natividade",
     "regional": "Sudeste",
     "regionalSlug": "sudeste",
     "macrorregional": "sul",
