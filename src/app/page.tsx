@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Map, LayoutGrid, MapPin, Search, MessageCircle, ArrowRight, Bot, Heart, Brain } from "lucide-react";
 import { EixoCard } from "@/components/eixos/eixo-card";
 import { StatCard } from "@/components/ui/stat-card";
-import { MapaPlaceholder } from "@/components/mapa/mapa-placeholder";
+import { MapaDinamico } from "@/components/mapa/mapa-dinamico";
 import { eixos, getTotalPropostas } from "@/data/eixos";
 
 /**
@@ -127,7 +127,7 @@ export default function Home() {
               Ver mapa completo <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <MapaPlaceholder />
+          <MapaDinamico />
         </div>
       </section>
 
