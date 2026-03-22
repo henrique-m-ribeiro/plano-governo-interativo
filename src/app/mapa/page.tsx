@@ -1,4 +1,5 @@
-import { MapaPlaceholder } from "@/components/mapa/mapa-placeholder";
+import { MapaDinamico } from "@/components/mapa/mapa-dinamico";
+import { regionais } from "@/data/regioes";
 
 export const metadata = {
   title: "Mapa do Tocantins — Plano de Governo Interativo",
@@ -23,62 +24,25 @@ export default function MapaPage() {
           Clique em qualquer município para ver seu diagnóstico territorial
           e as propostas mais relevantes para a região.
         </p>
+        <div className="flex gap-4 mt-3 text-sm text-gray-500">
+          <span><strong className="text-gray-900">139</strong> municípios</span>
+          <span><strong className="text-gray-900">{regionais.length}</strong> regionais SEPLAN</span>
+          <span><strong className="text-gray-900">60</strong> indicadores</span>
+        </div>
       </div>
 
-      {/* Container do mapa */}
+      {/* Mapa interativo */}
       <div className="mb-8">
-        <MapaPlaceholder />
+        <MapaDinamico />
       </div>
 
-      {/* Legenda / Filtros (placeholder) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-white rounded-lg border border-gray-200">
-          <h3 className="font-semibold text-gray-900 text-sm mb-2">
-            Filtrar por indicador
-          </h3>
-          <p className="text-xs text-gray-500">
-            Selecione um indicador para colorir o mapa por nível de desenvolvimento.
-          </p>
-          <select className="mt-2 w-full text-sm border border-gray-200 rounded-md px-3 py-2 text-gray-600" disabled>
-            <option>IDH Municipal</option>
-            <option>PIB per capita</option>
-            <option>IDEB</option>
-            <option>Mortalidade infantil</option>
-          </select>
-        </div>
-
-        <div className="p-4 bg-white rounded-lg border border-gray-200">
-          <h3 className="font-semibold text-gray-900 text-sm mb-2">
-            Filtrar por região
-          </h3>
-          <p className="text-xs text-gray-500">
-            Foque em uma das 6 regiões de planejamento do estado.
-          </p>
-          <select className="mt-2 w-full text-sm border border-gray-200 rounded-md px-3 py-2 text-gray-600" disabled>
-            <option>Todas as regiões</option>
-            <option>Central</option>
-            <option>Norte</option>
-            <option>Sul</option>
-            <option>Sudeste</option>
-            <option>Bico do Papagaio</option>
-            <option>Oeste</option>
-          </select>
-        </div>
-
-        <div className="p-4 bg-white rounded-lg border border-gray-200">
-          <h3 className="font-semibold text-gray-900 text-sm mb-2">
-            Buscar município
-          </h3>
-          <p className="text-xs text-gray-500">
-            Digite o nome do município para localizá-lo no mapa.
-          </p>
-          <input
-            type="text"
-            placeholder="Ex: Palmas, Araguaína..."
-            className="mt-2 w-full text-sm border border-gray-200 rounded-md px-3 py-2 text-gray-600"
-            disabled
-          />
-        </div>
+      {/* Informações adicionais */}
+      <div className="p-4 bg-[var(--surface)] rounded-lg border border-gray-100 text-sm text-gray-600">
+        <p>
+          <strong>Como usar:</strong> Selecione um indicador no menu acima do mapa
+          para colorir os municípios por nível. Passe o mouse sobre um município
+          para ver o nome e clique para ver os dados detalhados.
+        </p>
       </div>
     </div>
   );
