@@ -35,10 +35,13 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Forte concentração econômica em poucos polos, com ampla maioria dos municípios em situação de vulnerabilidade.",
     indicadoresChave: [
-      "PIB per capita por município",
-      "Índice de desigualdade intermunicipal",
-      "Taxa de urbanização",
-      "Fluxos migratórios internos",
+      "populacao",
+      "pib_percapita",
+      "taxa_urbanizacao",
+      "crescimento_demografico",
+      "pib_total",
+      "va_servicos",
+      "populacao_censitaria",
     ],
     propostas: [
       {
@@ -85,10 +88,13 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Indicadores educacionais abaixo da média nacional em muitos municípios, evasão escolar no ensino médio, baixa qualificação profissional.",
     indicadoresChave: [
-      "IDEB",
-      "Taxa de abandono escolar",
-      "Matrículas no ensino técnico/superior",
-      "Cobertura de creches",
+      "ideb_anos_iniciais",
+      "ideb_ensino_medio",
+      "nota_saeb_matematica",
+      "nota_saeb_lingua_portuguesa",
+      "taxa_aprovacao",
+      "taxa_abandono",
+      "matriculas_total",
     ],
     propostas: [
       {
@@ -130,10 +136,14 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Acesso desigual a serviços de saúde, dependência de deslocamento a grandes centros, indicadores materno-infantis preocupantes em municípios menores.",
     indicadoresChave: [
-      "Cobertura da atenção básica",
-      "Mortalidade infantil",
-      "Leitos per capita",
-      "Tempo de deslocamento para serviço de média complexidade",
+      "taxa_mortalidade_infantil",
+      "leitos_internacao",
+      "profissionais_saude",
+      "estabelecimentos_saude",
+      "cobertura_vacinal",
+      "casos_dengue",
+      "obitos_totais",
+      "acidentes_peconhentos_total",
     ],
     propostas: [
       {
@@ -180,10 +190,10 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Logística precária em municípios afastados, baixa conectividade digital, déficit habitacional.",
     indicadoresChave: [
-      "Malha rodoviária pavimentada",
-      "Acesso à internet banda larga",
-      "Cobertura de saneamento",
-      "Déficit habitacional",
+      "densidade_banda_larga",
+      "indice_atendimento_agua",
+      "indice_atendimento_esgoto",
+      "indice_tratamento_esgoto",
     ],
     propostas: [
       {
@@ -222,10 +232,10 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Tocantins na transição Cerrado-Amazônia, pressão do agronegócio, queimadas, recursos hídricos.",
     indicadoresChave: [
-      "Área desmatada",
-      "Focos de incêndio",
-      "Unidades de conservação",
-      "Qualidade da água",
+      "area_desmatada_km2",
+      "vegetacao_natural_km2",
+      "cobertura_natural_pct",
+      "taxa_desmatamento_anual",
     ],
     propostas: [
       {
@@ -269,10 +279,10 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Indicadores de violência crescentes em polos urbanos, violência contra a mulher, déficit de efetivo policial em municípios menores.",
     indicadoresChave: [
-      "Taxa de homicídios",
-      "Feminicídios",
-      "Efetivo policial per capita",
-      "Ocorrências por tipo",
+      "homicidios",
+      "homicidios_masculino",
+      "homicidios_feminino",
+      "homicidio_doloso_fbsp",
     ],
     propostas: [
       {
@@ -317,10 +327,12 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "Baixa capacidade institucional de muitos municípios, gestão baseada em intuição e não em dados, fragmentação de políticas.",
     indicadoresChave: [
-      "IEGM (TCE)",
-      "Receita própria vs. transferências",
-      "Índice de transparência",
-      "Digitalização de serviços",
+      "receita_total",
+      "receita_tributaria",
+      "receita_transferencias",
+      "servidores_estatutarios",
+      "servidores_total",
+      "capacidade_gestao",
     ],
     propostas: [
       {
@@ -371,10 +383,13 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "O Tocantins possui enorme potencial agropecuário, mas a cadeia produtiva ainda é concentrada em poucos municípios e o valor agregado permanece baixo, com exportação predominante de grãos e gado in natura, sem industrialização local que gere emprego e renda para toda a população.",
     indicadoresChave: [
-      "Valor Bruto da Produção Agropecuária",
-      "Área plantada vs. produtividade",
-      "Empregos formais no agronegócio",
-      "Participação da agricultura familiar",
+      "area_soja_ha",
+      "area_milho_ha",
+      "efetivo_bovino",
+      "producao_leite_litros",
+      "area_total_plantada_ha",
+      "diversidade_produtiva",
+      "va_agropecuaria",
     ],
     propostas: [
       {
@@ -422,10 +437,8 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "O Tocantins possui reservas minerais significativas, mas a exploração ainda é desordenada em muitas regiões, com impactos ambientais e sociais que poderiam ser mitigados com regulação moderna, fiscalização efetiva e exigência de contrapartidas para o desenvolvimento local.",
     indicadoresChave: [
-      "Receita de CFEM por município",
-      "Licenças ambientais vigentes",
-      "Empregos no setor mineral",
-      "Áreas de recuperação ambiental",
+      "cfem_arrecadacao",
+      "cfem_distribuicao",
     ],
     propostas: [
       {
@@ -472,10 +485,8 @@ export const eixos: Eixo[] = [
     problemaCentral:
       "O Tocantins exporta matéria-prima bruta e importa produtos manufaturados. A ausência de parque industrial robusto limita as oportunidades de emprego qualificado e faz com que a riqueza gerada no estado seja transferida para outras regiões sem beneficiar a população local.",
     indicadoresChave: [
-      "Participação industrial no PIB estadual",
-      "Empregos industriais formais",
-      "Balança comercial de manufaturados",
-      "Número de indústrias instaladas",
+      "va_industria",
+      "emprego_formal_total",
     ],
     propostas: [
       {
