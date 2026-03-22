@@ -490,8 +490,162 @@ def imprimir_validacao(data):
 def gerar_eixo_01():
     """Eixo 1 — Desenvolvimento Regional e Redução de Desigualdades"""
     print("\n=== Eixo 01: Desenvolvimento Regional ===")
-    # Implementado na Fase C
-    raise NotImplementedError("Fase C")
+
+    csv_censo = os.path.join(BD_CSV, "demografia", "censo_2022_populacao.csv")
+    csv_estim = os.path.join(BD_CSV, "demografia", "estimativa_populacao_ibge.csv")
+    csv_pib = os.path.join(BD_CSV, "economia", "pib_municipal_ibge.csv")
+    csv_pop_sit = os.path.join(GEO_CSV, "populacao",
+                                "popul_resid_por_situacao_do_domicilio_e_sexo_2010.csv")
+    csv_pop_cens = os.path.join(GEO_CSV, "populacao",
+                                 "populacao_censitaria_municip_1991_2000_2010.csv")
+
+    # --- População: série histórica ---
+    # Censo 2022 (apenas 1 ano)
+    rows_censo = ler_csv(csv_censo)
+    pop_serie = defaultdict(dict)
+    for row in rows_censo:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        val = row.get("populacao_2022", "").strip()
+        if val:
+            try:
+                pop_serie[cod]["2022"] = round(float(val), 2)
+            except ValueError:
+                pass
+
+    # Estimativa pop
+    rows_estim = ler_csv(csv_estim)
+    for row in rows_estim:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        val = row.get("pop_estimada", "").strip()
+        if ano and val:
+            try:
+                pop_serie[cod][ano] = round(float(val), 2)
+            except ValueError:
+                pass
+
+    # Pop censitária (Geoportal, formato largo: pop_1991, pop_2000_1, pop_2010_1)
+    rows_cens = ler_csv(csv_pop_cens)
+    for row in rows_cens:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col_name, ano in [("pop_1991", "1991"), ("pop_2000_1", "2000"),
+                               ("pop_2010_1", "2010")]:
+            val = row.get(col_name, "").strip().replace(",", ".")
+            if val and val not in ("-", ""):
+                try:
+                    v = float(val)
+                    if v > 0:
+                        pop_serie[cod][ano] = round(v, 2)
+                except ValueError:
+                    pass
+
+    # --- PIB per capita (formato largo) ---
+    rows_pib = ler_csv(csv_pib)
+    pib_pc = defaultdict(dict)
+    for row in rows_pib:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col, val_str in row.items():
+            m = re.match(r"pib_percapita_(\d{4})", col.strip())
+            if m:
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        pib_pc[cod][ano] = round(float(val_str), 2)
+                    except ValueError:
+                        pass
+
+    # --- Taxa de urbanização (2010) ---
+    rows_urb = ler_csv(csv_pop_sit)
+    taxa_urb = defaultdict(dict)
+    for row in rows_urb:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        tot = row.get("tot_p_res", "").strip().replace(",", ".")
+        urb = row.get("tot_urb", "").strip().replace(",", ".")
+        if tot and urb:
+            try:
+                total = float(tot)
+                urbano = float(urb)
+                if total > 0:
+                    taxa_urb[cod]["2010"] = round((urbano / total) * 100, 2)
+            except ValueError:
+                pass
+
+    # --- Crescimento demográfico (derivado) ---
+    cresc = {}
+    for cod, anos in pop_serie.items():
+        anos_sorted = sorted(anos.keys())
+        cresc[cod] = {}
+        for i in range(1, len(anos_sorted)):
+            a0 = anos_sorted[i - 1]
+            a1 = anos_sorted[i]
+            p0 = anos[a0]
+            p1 = anos[a1]
+            if p0 > 0:
+                delta_anos = int(a1) - int(a0)
+                if delta_anos > 0:
+                    taxa = ((p1 / p0) ** (1 / delta_anos) - 1) * 100
+                    cresc[cod][a1] = round(taxa, 2)
+    cresc = {k: v for k, v in cresc.items() if v}
+
+    indicadores = [
+        construir_indicador(
+            "populacao",
+            "População",
+            "hab",
+            "IBGE (Censos e Estimativas)",
+            "População do município (censos e estimativas anuais)",
+            dict(pop_serie)
+        ),
+        construir_indicador(
+            "pib_percapita",
+            "PIB per capita",
+            "R$",
+            "IBGE",
+            "Produto Interno Bruto per capita do município (R$)",
+            dict(pib_pc)
+        ),
+        construir_indicador(
+            "taxa_urbanizacao",
+            "Taxa de urbanização",
+            "%",
+            "IBGE (Censo 2010)",
+            "Percentual da população residente em área urbana",
+            dict(taxa_urb)
+        ),
+        construir_indicador(
+            "crescimento_demografico",
+            "Taxa de crescimento demográfico",
+            "% a.a.",
+            "IBGE",
+            "Taxa média anual de crescimento populacional entre períodos censitários",
+            cresc
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/demografia/censo_2022_populacao.csv",
+        "basedosdados/csv/demografia/estimativa_populacao_ibge.csv",
+        "basedosdados/csv/economia/pib_municipal_ibge.csv",
+        "geoportal-seplan/csv/populacao/popul_resid_por_situacao_do_domicilio_e_sexo_2010.csv",
+        "geoportal-seplan/csv/populacao/populacao_censitaria_municip_1991_2000_2010.csv",
+    ]
+
+    return construir_json_eixo(1, indicadores, fontes)
 
 def gerar_eixo_02():
     """Eixo 2 — Educação e Capital Humano"""
@@ -502,8 +656,300 @@ def gerar_eixo_02():
 def gerar_eixo_03():
     """Eixo 3 — Saúde e Qualidade de Vida"""
     print("\n=== Eixo 03: Saúde ===")
-    # Implementado na Fase C
-    raise NotImplementedError("Fase C")
+
+    csv_cnes = os.path.join(BD_CSV, "saude", "cnes_estabelecimentos_bd.csv")
+    csv_sim = os.path.join(BD_CSV, "saude", "sim_obitos_causa_bd.csv")
+    csv_tmi = os.path.join(GEO_CSV, "saude", "taxa_de_mortalidade_infantil_2008_a_2015.csv")
+    csv_leitos = os.path.join(GEO_CSV, "saude", "numero_de_leitos_de_internacao_hospitalar.csv")
+    csv_prof = os.path.join(GEO_CSV, "saude", "numero_de_profissionais_de_saude.csv")
+    csv_estab = os.path.join(GEO_CSV, "saude", "numero_estabelecimentos_saude.csv")
+    csv_dengue = os.path.join(GEO_CSV, "saude", "numero_casos_dengue.csv")
+    csv_imun = os.path.join(GEO_CSV, "saude", "imunizacao_em_menores.csv")
+    csv_nasc = os.path.join(GEO_CSV, "saude",
+                             "numero_nascidos_vivos_por_sexo_faixa_etaria_de_mae_2009_a_2018.csv")
+    csv_obitos_fe = os.path.join(GEO_CSV, "saude",
+                                  "numero_obitos_por_faixa_etaria_2009_a_2018.csv")
+
+    # --- Taxa de mortalidade infantil (Geoportal, largo) ---
+    tmi = processar_csv_largo(csv_tmi, "m_inf")
+
+    # --- Leitos (Geoportal, largo: sus_AAAA + priv_AAAA → total) ---
+    rows_leitos = ler_csv(csv_leitos)
+    leitos_serie = defaultdict(dict)
+    for row in rows_leitos:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col, val_str in row.items():
+            col_clean = col.strip()
+            # sus_AAAA ou priv_AAAA
+            m = re.match(r"(sus|priv)_(\d{4})", col_clean)
+            if m:
+                ano = m.group(2)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        v = float(val_str)
+                        if ano not in leitos_serie[cod]:
+                            leitos_serie[cod][ano] = 0
+                        leitos_serie[cod][ano] += v
+                    except ValueError:
+                        pass
+    leitos_serie = {k: {a: round(v, 2) for a, v in anos.items()}
+                    for k, anos in leitos_serie.items()}
+
+    # --- Profissionais de saúde (Geoportal, largo: total por ano) ---
+    # Colunas como anes_2008, cirur_2008... Somar todas as especialidades por ano
+    rows_prof = ler_csv(csv_prof)
+    prof_serie = defaultdict(dict)
+    for row in rows_prof:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        # Agrupar por ano somando todas as especialidades
+        totais_por_ano = defaultdict(float)
+        for col, val_str in row.items():
+            col_clean = col.strip()
+            m = re.match(r"[a-z]+_(\d{4})", col_clean)
+            if m and col_clean not in ("cod_ibge", "pop_1996", "pop_2000",
+                                         "pop_2007", "pop_2008", "pop_2009",
+                                         "pop_2010"):
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        totais_por_ano[ano] += float(val_str)
+                    except ValueError:
+                        pass
+        for ano, total in totais_por_ano.items():
+            prof_serie[cod][ano] = round(total, 2)
+
+    # --- Estabelecimentos de saúde (Geoportal, largo) ---
+    rows_estab = ler_csv(csv_estab)
+    estab_serie = defaultdict(dict)
+    for row in rows_estab:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        totais_por_ano = defaultdict(float)
+        for col, val_str in row.items():
+            col_clean = col.strip()
+            m = re.match(r"[a-z]+_(\d{4})", col_clean)
+            if m and col_clean not in ("cod_ibge",):
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        totais_por_ano[ano] += float(val_str)
+                    except ValueError:
+                        pass
+        for ano, total in totais_por_ano.items():
+            estab_serie[cod][ano] = round(total, 2)
+
+    # --- CNES estabelecimentos (basedosdados, longo: usar dezembro) ---
+    rows_cnes = ler_csv(csv_cnes)
+    cnes_serie = defaultdict(dict)
+    for row in rows_cnes:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        if row.get("mes", "").strip() != "12":
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        try:
+            v = float(row.get("estabelecimentos", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+        if ano not in cnes_serie[cod]:
+            cnes_serie[cod][ano] = 0
+        cnes_serie[cod][ano] += v
+    cnes_serie = {k: {a: round(v, 2) for a, v in anos.items()}
+                  for k, anos in cnes_serie.items()}
+
+    # Merge estabelecimentos: Geoportal + CNES
+    estab_merged = merge_series(dict(estab_serie), dict(cnes_serie))
+
+    # --- Casos de dengue (Geoportal, largo com anos de 2 dígitos: dengue_07..16) ---
+    rows_dengue = ler_csv(csv_dengue)
+    dengue = defaultdict(dict)
+    for row in rows_dengue:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col, val_str in row.items():
+            m = re.match(r"dengue_(\d{2})", col.strip())
+            if m:
+                ano_2d = int(m.group(1))
+                ano = str(2000 + ano_2d)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        dengue[cod][ano] = round(float(val_str), 2)
+                    except ValueError:
+                        pass
+    dengue = dict(dengue)
+
+    # --- Nascidos vivos (Geoportal, largo: somar todas colunas por ano) ---
+    rows_nasc = ler_csv(csv_nasc)
+    nasc_serie = defaultdict(dict)
+    for row in rows_nasc:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        totais_por_ano = defaultdict(float)
+        for col, val_str in row.items():
+            col_clean = col.strip()
+            m = re.match(r"[hm]\w*_(\d{4})", col_clean)
+            if m:
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        totais_por_ano[ano] += float(val_str)
+                    except ValueError:
+                        pass
+        for ano, total in totais_por_ano.items():
+            nasc_serie[cod][ano] = round(total, 2)
+
+    # --- Óbitos totais (basedosdados SIM, longo: somar por município/ano) ---
+    obitos_bd = defaultdict(dict)
+    rows_sim = ler_csv(csv_sim)
+    for row in rows_sim:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        try:
+            v = float(row.get("obitos", "0").strip().replace(",", "."))
+        except ValueError:
+            continue
+        if ano not in obitos_bd[cod]:
+            obitos_bd[cod][ano] = 0
+        obitos_bd[cod][ano] += v
+    obitos_bd = {k: {a: round(v, 2) for a, v in anos.items()}
+                 for k, anos in obitos_bd.items()}
+
+    # --- Cobertura vacinal (Geoportal: média das coberturas _c_ por ano) ---
+    rows_imun = ler_csv(csv_imun)
+    vac_serie = defaultdict(dict)
+    for row in rows_imun:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        cobs_por_ano = defaultdict(list)
+        for col, val_str in row.items():
+            col_clean = col.strip()
+            # Colunas de cobertura: bcg_c_2013, dtp_c_2014, etc.
+            m = re.match(r"[a-z]+_c_(\d{4})", col_clean)
+            if m:
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        cobs_por_ano[ano].append(float(val_str))
+                    except ValueError:
+                        pass
+        for ano, vals in cobs_por_ano.items():
+            if vals:
+                vac_serie[cod][ano] = round(sum(vals) / len(vals), 2)
+
+    indicadores = [
+        construir_indicador(
+            "taxa_mortalidade_infantil",
+            "Taxa de mortalidade infantil",
+            "por mil nascidos vivos",
+            "DATASUS/Geoportal SEPLAN",
+            "Óbitos de menores de 1 ano por mil nascidos vivos",
+            tmi
+        ),
+        construir_indicador(
+            "leitos_internacao",
+            "Leitos de internação hospitalar",
+            "und",
+            "DATASUS/Geoportal SEPLAN",
+            "Total de leitos de internação (SUS + privados)",
+            dict(leitos_serie)
+        ),
+        construir_indicador(
+            "profissionais_saude",
+            "Profissionais de saúde",
+            "und",
+            "DATASUS/Geoportal SEPLAN",
+            "Total de profissionais de saúde registrados no município",
+            dict(prof_serie)
+        ),
+        construir_indicador(
+            "estabelecimentos_saude",
+            "Estabelecimentos de saúde",
+            "und",
+            "CNES/DATASUS",
+            "Total de estabelecimentos de saúde (todas as categorias)",
+            estab_merged
+        ),
+        construir_indicador(
+            "nascidos_vivos",
+            "Nascidos vivos",
+            "und",
+            "DATASUS/Geoportal SEPLAN",
+            "Total de nascidos vivos no município por ano",
+            dict(nasc_serie)
+        ),
+        construir_indicador(
+            "obitos_totais",
+            "Óbitos totais",
+            "und",
+            "SIM/DATASUS",
+            "Total de óbitos registrados por todas as causas (CID-10)",
+            dict(obitos_bd)
+        ),
+        construir_indicador(
+            "cobertura_vacinal",
+            "Cobertura vacinal em menores",
+            "%",
+            "PNI/DATASUS/Geoportal SEPLAN",
+            "Média da cobertura vacinal (BCG, DTP, Pólio, Febre Amarela) em menores",
+            dict(vac_serie)
+        ),
+        construir_indicador(
+            "casos_dengue",
+            "Casos de dengue",
+            "und",
+            "DATASUS/Geoportal SEPLAN",
+            "Número de casos notificados de dengue",
+            dengue
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/saude/cnes_estabelecimentos_bd.csv",
+        "basedosdados/csv/saude/sim_obitos_causa_bd.csv",
+        "geoportal-seplan/csv/saude/taxa_de_mortalidade_infantil_2008_a_2015.csv",
+        "geoportal-seplan/csv/saude/numero_de_leitos_de_internacao_hospitalar.csv",
+        "geoportal-seplan/csv/saude/numero_de_profissionais_de_saude.csv",
+        "geoportal-seplan/csv/saude/numero_estabelecimentos_saude.csv",
+        "geoportal-seplan/csv/saude/numero_casos_dengue.csv",
+        "geoportal-seplan/csv/saude/imunizacao_em_menores.csv",
+        "geoportal-seplan/csv/saude/numero_nascidos_vivos_por_sexo_faixa_etaria_de_mae_2009_a_2018.csv",
+        "geoportal-seplan/csv/saude/numero_obitos_por_faixa_etaria_2009_a_2018.csv",
+    ]
+
+    return construir_json_eixo(3, indicadores, fontes)
 
 def gerar_eixo_04():
     """Eixo 4 — Infraestrutura e Conectividade"""
@@ -682,8 +1128,123 @@ def gerar_eixo_05():
 def gerar_eixo_06():
     """Eixo 6 — Segurança Pública e Cidadania"""
     print("\n=== Eixo 06: Segurança ===")
-    # Implementado na Fase C
-    raise NotImplementedError("Fase C")
+
+    csv_sim_hom = os.path.join(BD_CSV, "seguranca", "sim_homicidios_municipio_bd.csv")
+    csv_fbsp_mun = os.path.join(BD_CSV, "seguranca", "fbsp_municipio_tocantins.csv")
+    csv_fbsp_uf = os.path.join(BD_CSV, "seguranca", "fbsp_uf_tocantins.csv")
+    csv_sinesp = os.path.join(BD_CSV, "seguranca", "sinesp_to_bd.csv")
+
+    # --- Homicídios municipais (SIM, 139 municípios) ---
+    homicidios = processar_csv_longo(csv_sim_hom, "homicidios")
+    hom_masc = processar_csv_longo(csv_sim_hom, "homicidios_masculino")
+    hom_fem = processar_csv_longo(csv_sim_hom, "homicidios_feminino")
+
+    # --- FBSP municipal (só Palmas, muitas categorias) ---
+    rows_fbsp_mun = ler_csv(csv_fbsp_mun)
+    fbsp_hom_doloso = defaultdict(dict)
+    for row in rows_fbsp_mun:
+        cod = resolver_cod_ibge(row, "id_municipio")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        if not ano:
+            continue
+        val = row.get("quantidade_homicidio_doloso", "").strip()
+        if val and val not in ("-", ""):
+            try:
+                fbsp_hom_doloso[cod][ano] = round(float(val), 2)
+            except ValueError:
+                pass
+
+    # --- Contexto estadual (FBSP UF + SINESP) ---
+    contexto = {"fonte": "FBSP/SINESP", "series": {}}
+
+    # FBSP UF
+    rows_fbsp = ler_csv(csv_fbsp_uf)
+    for indicador_col, indicador_id in [
+        ("quantidade_cvli", "cvli_to"),
+        ("quantidade_ocorrencia_homicidio_doloso", "homicidios_dolosos_to"),
+        ("quantidade_morte_violenta_intencional", "mvi_to"),
+        ("quantidade_feminicidio", "feminicidios_to"),
+        ("quantidade_estupro", "estupros_to"),
+        ("quantidade_roubo_de_veiculo", "roubos_veiculo_to"),
+        ("quantidade_suicidio", "suicidios_to"),
+    ]:
+        serie = {}
+        for row in rows_fbsp:
+            ano = row.get("ano", "").strip()[:4]
+            val = row.get(indicador_col, "").strip()
+            if ano and val and val not in ("-", ""):
+                try:
+                    serie[ano] = round(float(val), 2)
+                except ValueError:
+                    pass
+        if serie:
+            contexto["series"][indicador_id] = serie
+
+    # SINESP TO (mesmas colunas, complementar)
+    if os.path.exists(csv_sinesp):
+        rows_sin = ler_csv(csv_sinesp)
+        for indicador_col, indicador_id in [
+            ("quantidade_cvli", "cvli_to"),
+            ("quantidade_ocorrencia_homicidio_doloso", "homicidios_dolosos_to"),
+        ]:
+            for row in rows_sin:
+                ano = row.get("ano", "").strip()[:4]
+                val = row.get(indicador_col, "").strip()
+                if ano and val and val not in ("-", ""):
+                    try:
+                        # Só preencher se FBSP não tem o dado
+                        if ano not in contexto["series"].get(indicador_id, {}):
+                            if indicador_id not in contexto["series"]:
+                                contexto["series"][indicador_id] = {}
+                            contexto["series"][indicador_id][ano] = round(float(val), 2)
+                    except ValueError:
+                        pass
+
+    indicadores = [
+        construir_indicador(
+            "homicidios",
+            "Homicídios",
+            "und",
+            "SIM/DATASUS",
+            "Total de óbitos por agressão (homicídios) registrados no município",
+            homicidios
+        ),
+        construir_indicador(
+            "homicidios_masculino",
+            "Homicídios masculinos",
+            "und",
+            "SIM/DATASUS",
+            "Homicídios de vítimas do sexo masculino",
+            hom_masc
+        ),
+        construir_indicador(
+            "homicidios_feminino",
+            "Homicídios femininos",
+            "und",
+            "SIM/DATASUS",
+            "Homicídios de vítimas do sexo feminino",
+            hom_fem
+        ),
+        construir_indicador(
+            "homicidio_doloso_fbsp",
+            "Homicídio doloso (FBSP)",
+            "und",
+            "FBSP",
+            "Homicídios dolosos registrados (dados FBSP, cobertura limitada)",
+            dict(fbsp_hom_doloso)
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/seguranca/sim_homicidios_municipio_bd.csv",
+        "basedosdados/csv/seguranca/fbsp_municipio_tocantins.csv",
+        "basedosdados/csv/seguranca/fbsp_uf_tocantins.csv",
+        "basedosdados/csv/seguranca/sinesp_to_bd.csv",
+    ]
+
+    return construir_json_eixo(6, indicadores, fontes, contexto_estadual=contexto)
 
 def gerar_eixo_07():
     """Eixo 7 — Gestão Pública e Inovação"""
