@@ -10,7 +10,7 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 - **Repo acadêmico central:** [doutorado](https://github.com/henrique-m-ribeiro/doutorado) — CSVs originais do pipeline como artefato de pesquisa
 - **Dashboard territorial:** [tocantins-integrado](https://github.com/henrique-m-ribeiro/tocantins-integrado) — sistema técnico complementar
 - **Cadernos municipais:** [caderno-tocantins-2026](https://github.com/henrique-m-ribeiro/caderno-tocantins-2026) — conteúdo dos 9 volumes
-- **Framework metodológico:** [ia-collab-os](https://github.com/henrique-m-ribeiro/ia-collab-os) — colaboração H-IA v2.2
+- **Framework metodológico:** [ia-collab-os](https://github.com/henrique-m-ribeiro/ia-collab-os) — colaboração H-IA v2.5
 
 ## Conexão Acadêmica
 - **Ciclo PA:** Ciclo 4 — Frente F4 (Artefatos Político-Governamentais)
@@ -20,7 +20,7 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 ## Stack Técnica
 - **Framework:** Next.js 16+ (App Router) com TypeScript
 - **Estilização:** Tailwind CSS 4
-- **Mapas:** Leaflet + react-leaflet (planejado — atualmente placeholder, GeoJSON pendente de integração)
+- **Mapas:** Leaflet + react-leaflet (integrado — 139 polígonos, choropleth com 7 indicadores, GeoJSON EPSG:4674)
 - **Ícones:** lucide-react
 - **Dados:** CSVs do pipeline em `data/pipeline/` (copiados do doutorado), JSONs consolidados em `src/data/indicadores/` (ADR-013). Este repo é a fonte canônica de dados para o app.
 - **IA/LLM:** Integração com API de LLM para assistente conversacional e processamento de contribuições
@@ -45,12 +45,10 @@ do estado, apresentando o plano de governo com base em evidências e escuta cida
 6. Segurança Pública e Cidadania
 7. Gestão Pública e Inovação (eixo transversal — convergência acadêmica)
 8. Agropecuária e Desenvolvimento Rural
-9. Economia e Emprego
-10. Cultura, Esporte e Juventude
+9. Mineração Sustentável (ADR-014 — realinhado com memo v4)
+10. Industrialização e Atração de Investimentos (ADR-014 — realinhado com memo v4)
 
-Os eixos refletem as vocações econômicas e sociais do Tocantins e dialogam com pautas
-de alto engajamento no eleitorado. O diagnóstico territorial parte do trabalho da
-Secretaria de Planejamento do Tocantins (dados no repo caderno-tocantins-2026).
+Os eixos refletem a proposta apresentada à Senadora no memo v4 (`doutorado/04-comunicacao/governo-interativo/memo-plano-governo-interativo-v4.docx`). O diagnóstico territorial parte do pipeline de dados com 98 CSVs de fontes oficiais (Geoportal SEPLAN, IBGE, INEP, ANM, entre outras).
 
 ## Funcionalidades de IA
 A plataforma incorpora IA em três dimensões complementares:
@@ -75,13 +73,16 @@ A dimensão de escuta conecta diretamente com a pesquisa de doutorado:
 - **Tom institucional:** Não partidário, baseado em evidências
 - **Performance:** Otimizado para conexões lentas (interior do TO)
 
-## Estado Atual do MVP (2026-03-20)
-- 8 páginas implementadas com dados placeholder/genéricos
-- `municipios.ts` sem cod_ibge, sem indicadores reais
-- Mapa placeholder sem GeoJSON real
-- Eixos com propostas genéricas
+## Estado Atual do MVP (2026-03-22)
+- **Fase I CONCLUÍDA** — dados reais em todas as 8 páginas
+- `municipios.ts` com 139 registros tipados (codIbge, nome, regional, macrorregional, polo)
+- `indicadores-utils.ts` com funções utilitárias para acessar indicadores dos JSONs
+- 10 JSONs em `src/data/indicadores/` com 60 indicadores reais (79.927 datapoints, séries 1989–2026)
+- Mapa interativo com Leaflet + GeoJSON (139 polígonos, choropleth com 7 indicadores)
+- `eixos.ts` com indicadoresChave IDs reais conectados aos JSONs
+- Build: 14 rotas pré-renderizadas sem erros
 - **Plano de incorporação:** `doutorado/02-pesquisa-acao/plano-incorporacao-mvp.md` (v3, 4 fases)
-- **137 indicadores reais disponíveis** no pipeline do doutorado, pendentes de integração
+- **Próxima fase:** Fase II (Conteúdo dos Eixos — 9 documentos-eixo restantes, integração nas páginas)
 
 ## Governança de Ambientes
 - **Cowork (📋):** Preparação de dados, documentos-eixo, briefings, revisão
