@@ -1722,11 +1722,293 @@ def gerar_eixo_07():
 
     return construir_json_eixo(7, indicadores, fontes)
 
+def _extrair_serie_geoportal_agro(caminho, prefixo):
+    """
+    Extrai série temporal de CSV do Geoportal agro (formato largo).
+    Prefixo: 'area_', 'bovin_', 'leite_', etc.
+    Retorna {cod_ibge: {ano: valor}}.
+    """
+    rows = ler_csv(caminho)
+    if not rows:
+        return {}
+    serie = defaultdict(dict)
+    for row in rows:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod:
+            cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col, val_str in row.items():
+            col_clean = col.strip().lower()
+            m = re.match(rf"{prefixo}(\d{{4}})", col_clean)
+            if m:
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", "", "0"):
+                    try:
+                        v = float(val_str)
+                        if v > 0:
+                            serie[cod][ano] = round(v, 2)
+                    except ValueError:
+                        pass
+    return dict(serie)
+
+
 def gerar_eixo_08():
     """Eixo 8 — Agropecuária e Desenvolvimento Rural"""
     print("\n=== Eixo 08: Agropecuária ===")
-    # Implementado na Fase E
-    raise NotImplementedError("Fase E")
+
+    csv_pam = os.path.join(BD_CSV, "agropecuaria", "pam_principais_culturas.csv")
+    csv_ppm = os.path.join(BD_CSV, "agropecuaria", "ppm_rebanho_bovino.csv")
+    geo_agro = os.path.join(GEO_CSV, "agropecuaria")
+
+    # === 1. Área de soja (Geoportal 1989-2018 + PAM 2024) ===
+    soja_geo = _extrair_serie_geoportal_agro(
+        os.path.join(geo_agro, "lavoura_temporaria_soja_1989_2018.csv"), "area_"
+    )
+    # PAM dados recentes
+    rows_pam = ler_csv(csv_pam)
+    soja_pam = defaultdict(dict)
+    milho_pam = defaultdict(dict)
+    arroz_pam = defaultdict(dict)
+    area_total_pam = defaultdict(dict)
+    culturas_por_mun_ano = defaultdict(lambda: defaultdict(set))
+
+    for row in rows_pam:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        ano = row.get("ano", "").strip()[:4]
+        cultura = row.get("cultura", "").strip().lower()
+        area_str = row.get("area_plantada_ha", "").strip().replace(",", ".")
+        if not ano or not area_str or area_str in ("-", ""):
+            continue
+        try:
+            area = float(area_str)
+        except ValueError:
+            continue
+        if area > 0:
+            culturas_por_mun_ano[cod][ano].add(cultura)
+            if ano not in area_total_pam[cod]:
+                area_total_pam[cod][ano] = 0
+            area_total_pam[cod][ano] += area
+
+        if "soja" in cultura:
+            soja_pam[cod][ano] = round(area, 2)
+        elif "milho" in cultura:
+            milho_pam[cod][ano] = round(area, 2)
+        elif "arroz" in cultura:
+            arroz_pam[cod][ano] = round(area, 2)
+
+    area_soja = merge_series(soja_geo, dict(soja_pam))
+
+    # === 2. Área de milho ===
+    milho_geo = _extrair_serie_geoportal_agro(
+        os.path.join(geo_agro, "lavoura_temporaria_milho_1989_2018.csv"), "area_"
+    )
+    area_milho = merge_series(milho_geo, dict(milho_pam))
+
+    # === 3. Área de arroz ===
+    arroz_geo = _extrair_serie_geoportal_agro(
+        os.path.join(geo_agro, "lavoura_temporaria_arroz_1989_2018.csv"), "area_"
+    )
+    area_arroz = merge_series(arroz_geo, dict(arroz_pam))
+
+    # === 4. Efetivo bovino (Geoportal 1989-2018 + PPM 2022-2024) ===
+    bovino_geo = _extrair_serie_geoportal_agro(
+        os.path.join(geo_agro, "bovino1989_2018.csv"), "bovin_"
+    )
+    # PPM: formato largo bovinos_2022, bovinos_2023, bovinos_2024
+    rows_ppm = ler_csv(csv_ppm)
+    bovino_ppm = defaultdict(dict)
+    for row in rows_ppm:
+        cod = resolver_cod_ibge(row, "cod_ibge")
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+        for col, val_str in row.items():
+            m = re.match(r"bovinos_(\d{4})", col.strip())
+            if m:
+                ano = m.group(1)
+                val_str = val_str.strip().replace(",", ".")
+                if val_str and val_str not in ("-", ""):
+                    try:
+                        bovino_ppm[cod][ano] = round(float(val_str), 2)
+                    except ValueError:
+                        pass
+    efetivo_bovino = merge_series(bovino_geo, dict(bovino_ppm))
+
+    # === 5. Produção de leite ===
+    leite = _extrair_serie_geoportal_agro(
+        os.path.join(geo_agro, "leite1.csv"), "leite_"
+    )
+
+    # === 6. Produção aquicultura (2013-2018) ===
+    # Colunas: pr_AAAA_M (produção mensal) — somar por ano
+    csv_aqua = os.path.join(geo_agro, "aquicultura_2013_2018.csv")
+    aqua_serie = defaultdict(dict)
+    if os.path.exists(csv_aqua):
+        rows_aqua = ler_csv(csv_aqua)
+        for row in rows_aqua:
+            cod = resolver_cod_ibge(row, "cod_ibge")
+            if not cod:
+                cod = resolver_por_nome(row, list(row.keys()))
+            if not cod or cod not in TODOS_CODIGOS:
+                continue
+            totais_ano = defaultdict(float)
+            for col, val_str in row.items():
+                m = re.match(r"pr_(\d{4})_\d+", col.strip().lower())
+                if m:
+                    ano = m.group(1)
+                    val_str = val_str.strip().replace(",", ".")
+                    if val_str and val_str not in ("-", ""):
+                        try:
+                            totais_ano[ano] += float(val_str)
+                        except ValueError:
+                            pass
+            for ano, total in totais_ano.items():
+                if total > 0:
+                    aqua_serie[cod][ano] = round(total, 2)
+
+    # === 7. Área total plantada (soma de todas as lavouras Geoportal) ===
+    # Somar áreas de todas as lavouras temporárias e permanentes
+    area_total = defaultdict(lambda: defaultdict(float))
+
+    # Lavouras temporárias
+    lavs_temp = [
+        "lavoura_temporaria_soja_1989_2018.csv",
+        "lavoura_temporaria_milho_1989_2018.csv",
+        "lavoura_temporaria_arroz_1989_2018.csv",
+        "lavoura_temporaria_feijao_1989_2018.csv",
+        "lavoura_temporaria_mandioca_1989_2018.csv",
+        "lavoura_temporaria_cana_de_acucar_1989_2018.csv",
+        "lavoura_temporaria_algodao_1989_2018.csv",
+        "lavoura_temporaria_melancia_1989_2018.csv",
+        "lavoura_temporaria_sorgo_1989_2018.csv",
+    ]
+    # Lavouras permanentes
+    lavs_perm = [
+        "lavoura_permanente_banana_1989a2018.csv",
+        "lavoura_permanente_laranja_1989a2018.csv",
+        "lavoura_permanente_manga_1994a2018.csv",
+        "lavoura_permanente_maracuja_1989a2018.csv",
+        "lavoura_permanente_coco_da_baia_1996a2018.csv",
+        "lavoura_permanente_abacate_1989a2018.csv",
+    ]
+
+    for arq in lavs_temp + lavs_perm:
+        caminho = os.path.join(geo_agro, arq)
+        if not os.path.exists(caminho):
+            print(f"  [AVISO] Arquivo não encontrado: {arq}")
+            continue
+        serie = _extrair_serie_geoportal_agro(caminho, "area_")
+        for cod, anos in serie.items():
+            for ano, val in anos.items():
+                area_total[cod][ano] += val
+
+    # Adicionar PAM
+    for cod, anos in area_total_pam.items():
+        for ano, val in anos.items():
+            area_total[cod][ano] += val
+
+    area_total_dict = {k: {a: round(v, 2) for a, v in anos.items()}
+                       for k, anos in area_total.items()}
+
+    # === 8. Diversidade produtiva (contagem de culturas com produção > 0) ===
+    # Contar culturas distintas por município/ano nos CSVs de lavoura
+    diversidade = defaultdict(lambda: defaultdict(int))
+    for arq in lavs_temp + lavs_perm:
+        caminho = os.path.join(geo_agro, arq)
+        if not os.path.exists(caminho):
+            continue
+        serie = _extrair_serie_geoportal_agro(caminho, "prod_")
+        for cod, anos in serie.items():
+            for ano in anos:
+                diversidade[cod][ano] += 1
+
+    # PAM
+    for cod, anos in culturas_por_mun_ano.items():
+        for ano, culturas in anos.items():
+            diversidade[cod][ano] = max(diversidade[cod].get(ano, 0), len(culturas))
+
+    diversidade_dict = {k: dict(v) for k, v in diversidade.items() if v}
+
+    indicadores = [
+        construir_indicador(
+            "area_soja_ha",
+            "Área plantada de soja",
+            "ha",
+            "IBGE (PAM) / Geoportal SEPLAN",
+            "Área plantada de soja no município (hectares)",
+            area_soja
+        ),
+        construir_indicador(
+            "area_milho_ha",
+            "Área plantada de milho",
+            "ha",
+            "IBGE (PAM) / Geoportal SEPLAN",
+            "Área plantada de milho no município (hectares)",
+            area_milho
+        ),
+        construir_indicador(
+            "area_arroz_ha",
+            "Área plantada de arroz",
+            "ha",
+            "IBGE (PAM) / Geoportal SEPLAN",
+            "Área plantada de arroz no município (hectares)",
+            area_arroz
+        ),
+        construir_indicador(
+            "efetivo_bovino",
+            "Efetivo bovino",
+            "und",
+            "IBGE (PPM) / Geoportal SEPLAN",
+            "Número de cabeças de gado bovino no município",
+            efetivo_bovino
+        ),
+        construir_indicador(
+            "producao_leite_litros",
+            "Produção de leite",
+            "litros",
+            "IBGE / Geoportal SEPLAN",
+            "Produção anual de leite (litros × 1000)",
+            leite
+        ),
+        construir_indicador(
+            "producao_aquicultura",
+            "Produção de aquicultura",
+            "ton",
+            "IBGE / Geoportal SEPLAN",
+            "Produção anual de aquicultura (toneladas)",
+            dict(aqua_serie)
+        ),
+        construir_indicador(
+            "area_total_plantada_ha",
+            "Área total plantada",
+            "ha",
+            "IBGE / Geoportal SEPLAN",
+            "Soma das áreas plantadas de todas as lavouras (temporárias e permanentes)",
+            area_total_dict
+        ),
+        construir_indicador(
+            "diversidade_produtiva",
+            "Diversidade produtiva",
+            "und",
+            "IBGE / Geoportal SEPLAN",
+            "Número de culturas com produção registrada no município",
+            diversidade_dict
+        ),
+    ]
+
+    fontes = [
+        "basedosdados/csv/agropecuaria/pam_principais_culturas.csv",
+        "basedosdados/csv/agropecuaria/ppm_rebanho_bovino.csv",
+    ] + [f"geoportal-seplan/csv/agropecuaria/{f}" for f in lavs_temp + lavs_perm] + [
+        "geoportal-seplan/csv/agropecuaria/bovino1989_2018.csv",
+        "geoportal-seplan/csv/agropecuaria/leite1.csv",
+        "geoportal-seplan/csv/agropecuaria/aquicultura_2013_2018.csv",
+    ]
+
+    return construir_json_eixo(8, indicadores, fontes)
 
 def gerar_eixo_09():
     """Eixo 9 — Economia e Emprego"""
@@ -1902,8 +2184,69 @@ def gerar_eixo_09():
 def gerar_eixo_10():
     """Eixo 10 — Cultura, Esporte e Juventude"""
     print("\n=== Eixo 10: Cultura ===")
-    # Implementado na Fase E
-    raise NotImplementedError("Fase E")
+
+    csv_pop = os.path.join(GEO_CSV, "populacao",
+                            "popul_resid_cor_raca_sexo_situacao.csv")
+
+    # CSV identifica por nome (cod_ibge vazio), grupo único "Total"
+    # Extrair: população total, urbana/rural, por sexo (2000 e 2010)
+    rows = ler_csv(csv_pop)
+    pop_total = defaultdict(dict)
+    pop_jovem_proxy = defaultdict(dict)  # Razão urbana como proxy de perfil jovem
+
+    for row in rows:
+        cod = resolver_por_nome(row, list(row.keys()))
+        if not cod or cod not in TODOS_CODIGOS:
+            continue
+
+        # Pop total
+        for col_total, col_urb, ano in [
+            ("total_2000", "urb_tot_00", "2000"),
+            ("total_2010", "urb_tot_10", "2010"),
+        ]:
+            val_total = row.get(col_total, "").strip().replace(",", ".")
+            val_urb = row.get(col_urb, "").strip().replace(",", ".")
+            if val_total and val_total not in ("-", ""):
+                try:
+                    pop_total[cod][ano] = round(float(val_total), 2)
+                except ValueError:
+                    pass
+            if val_total and val_urb:
+                try:
+                    total = float(val_total)
+                    urb = float(val_urb)
+                    if total > 0:
+                        pop_jovem_proxy[cod][ano] = round((urb / total) * 100, 2)
+                except ValueError:
+                    pass
+
+    indicadores = [
+        construir_indicador(
+            "populacao_censitaria",
+            "População censitária",
+            "hab",
+            "IBGE (Censos 2000 e 2010)",
+            "População residente total nos censos demográficos",
+            dict(pop_total)
+        ),
+        construir_indicador(
+            "taxa_urbanizacao_censo",
+            "Taxa de urbanização (censos)",
+            "%",
+            "IBGE (Censos 2000 e 2010)",
+            "Percentual da população em área urbana (proxy de acesso a equipamentos culturais)",
+            dict(pop_jovem_proxy)
+        ),
+    ]
+
+    print("  [NOTA] Eixo 10 tem dados limitados — apenas 1 CSV disponível")
+    print("  [LACUNA] Dados de equipamentos culturais, esportivos e juventude não disponíveis no pipeline")
+
+    fontes = [
+        "geoportal-seplan/csv/populacao/popul_resid_cor_raca_sexo_situacao.csv",
+    ]
+
+    return construir_json_eixo(10, indicadores, fontes)
 
 
 # Registro de funções geradoras
